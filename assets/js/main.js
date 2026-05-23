@@ -916,11 +916,17 @@
     all:       'pri_01ksas56232knjqvbfq81m8ja5'
   };
 
-  // Initialize Paddle
-  Paddle.Initialize({
-    token: 'thpb31cmjgn1cfa3878n7y4w96qaw798250sncxzz9rjhz4j2r',
-    environment: 'production'
-  });
+  // Initialize Paddle (may fail in regions where Paddle is blocked)
+  try {
+    if (typeof Paddle !== 'undefined') {
+      Paddle.Initialize({
+        token: 'thpb31cmjgn1cfa3878n7y4w96qaw798250sncxzz9rjhz4j2r',
+        environment: 'production'
+      });
+    }
+  } catch (e) {
+    console.warn('Paddle init failed:', e);
+  }
 
   window.handleBuyClick = function (plan) {
     var priceId = PADDLE_PRICE_IDS[plan];
@@ -928,11 +934,19 @@
       showToast('Payment error. Please try again.');
       return;
     }
+    if (typeof Paddle === 'undefined') {
+      alert('Payment service is temporarily unavailable in your region. Please try a VPN or contact support@fluxora.site');
+      return;
+    }
     var successUrl = window.location.origin + window.location.pathname + '?paid=' + plan;
-    Paddle.Checkout.open({
-      items: [{ priceId: priceId, quantity: 1 }],
-      settings: { successUrl: successUrl }
-    });
+    try {
+      Paddle.Checkout.open({
+        items: [{ priceId: priceId, quantity: 1 }],
+        settings: { successUrl: successUrl }
+      });
+    } catch (e) {
+      alert('Failed to open checkout: ' + e.message + '. Please try again or contact support@fluxora.site');
+    }
   };
 
   /* ----- File input listeners ----- */
