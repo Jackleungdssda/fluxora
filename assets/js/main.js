@@ -908,46 +908,21 @@
     if (blob instanceof Blob) { setTimeout(function () { URL.revokeObjectURL(url); }, 5000); }
   }
 
-  // Paddle price ID mapping
-  var PADDLE_PRICE_IDS = {
-    image:     'pri_01ksas8ay0q93k1gf8ze7q2ten',
-    image_pdf: 'pri_01ksas7dnt1jhfbqkywfhe9xzm',
-    audio:     'pri_01ksas6at2cayn421knr6gwje6',
-    all:       'pri_01ksas56232knjqvbfq81m8ja5'
+  // Gumroad checkout URLs — works globally, no JS dependency
+  var GUMROAD_LINKS = {
+    image:     'https://turnerella67.gumroad.com/l/zovamt',
+    image_pdf: 'https://turnerella67.gumroad.com/l/bikbzg',
+    audio:     'https://turnerella67.gumroad.com/l/nrpoih',
+    all:       'https://turnerella67.gumroad.com/l/mmlzfg'
   };
 
-  // Initialize Paddle for overlay checkout (best UX where CDN is accessible)
-  var paddleReady = false;
-  try {
-    if (typeof Paddle !== 'undefined') {
-      Paddle.Initialize({
-        token: 'thpb31cmjgn1cfa3878n7y4w96qaw798250sncxzz9rjhz4j2r',
-        environment: 'production'
-      });
-      paddleReady = true;
-    }
-  } catch (e) {
-    console.warn('Paddle init failed:', e);
-  }
-
   window.handleBuyClick = function (plan) {
-    var priceId = PADDLE_PRICE_IDS[plan];
-    if (!priceId) {
+    var link = GUMROAD_LINKS[plan];
+    if (!link) {
       showToast('Payment error. Please try again.');
       return;
     }
-    var successUrl = window.location.origin + window.location.pathname + '?paid=' + plan;
-    if (paddleReady) {
-      // Overlay checkout — best UX (works outside China)
-      Paddle.Checkout.open({
-        items: [{ priceId: priceId, quantity: 1 }],
-        settings: { successUrl: successUrl }
-      });
-    } else {
-      // Direct URL checkout — works globally including regions where Paddle.js CDN is blocked
-      var directUrl = 'https://checkout.paddle.com/checkout/custom?price_id=' + encodeURIComponent(priceId) + '&success_url=' + encodeURIComponent(successUrl);
-      window.open(directUrl, '_blank');
-    }
+    window.open(link, '_blank');
   };
 
   /* ----- File input listeners ----- */
