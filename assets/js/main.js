@@ -916,13 +916,15 @@
     all:       'pri_01ksas56232knjqvbfq81m8ja5'
   };
 
-  // Initialize Paddle (may fail in regions where Paddle is blocked)
+  // Initialize Paddle for overlay checkout (best UX where CDN is accessible)
+  var paddleReady = false;
   try {
     if (typeof Paddle !== 'undefined') {
       Paddle.Initialize({
         token: 'thpb31cmjgn1cfa3878n7y4w96qaw798250sncxzz9rjhz4j2r',
         environment: 'production'
       });
+      paddleReady = true;
     }
   } catch (e) {
     console.warn('Paddle init failed:', e);
@@ -934,18 +936,17 @@
       showToast('Payment error. Please try again.');
       return;
     }
-    if (typeof Paddle === 'undefined') {
-      alert('Payment service is temporarily unavailable in your region. Please try a VPN or contact support@fluxora.site');
-      return;
-    }
     var successUrl = window.location.origin + window.location.pathname + '?paid=' + plan;
-    try {
+    if (paddleReady) {
+      // Overlay checkout — best UX (works outside China)
       Paddle.Checkout.open({
         items: [{ priceId: priceId, quantity: 1 }],
         settings: { successUrl: successUrl }
       });
-    } catch (e) {
-      alert('Failed to open checkout: ' + e.message + '. Please try again or contact support@fluxora.site');
+    } else {
+      // Direct URL checkout — works globally including regions where Paddle.js CDN is blocked
+      var directUrl = 'https://checkout.paddle.com/checkout/custom?price_id=' + encodeURIComponent(priceId) + '&success_url=' + encodeURIComponent(successUrl);
+      window.open(directUrl, '_blank');
     }
   };
 
