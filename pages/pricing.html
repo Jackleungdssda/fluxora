@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Fluxora pricing — one-time payment, lifetime access. Image tools $0.99, Image+PDF $1.99, +Audio $2.99, All Access $3.99. No subscriptions.">
+  <meta name="keywords" content="Fluxora pricing, file converter price, lifetime license, one-time payment converter">
+  <meta name="robots" content="index, follow">
+  <title>Pricing — Fluxora | One-Time Payment, Lifetime Access</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Pacifico&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{primary:'#007AFF',secondary:'#FF2D55'},borderRadius:{button:'8px'}}}}}</script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../assets/css/style.css?v=2">
+  <script src="../assets/js/i18n.js?v=6"></script>
+  <style>
+    body { background-color: #000 !important; color: #fff; }
+    .page-wrap { background: rgba(28,28,30,0.6); min-height: 100vh; }
+    .pricing-card { background: rgba(44,44,46,0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 32px 24px; text-align: center; transition: all 0.2s; }
+    .pricing-card:hover { border-color: rgba(255,255,255,0.2); }
+    .pricing-card.popular { border-color: #0A84FF; box-shadow: 0 0 24px rgba(10,132,255,0.2); }
+    .pricing-price { font-size: 2.5rem; font-weight: 800; letter-spacing: -0.02em; }
+    .check-list li { display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 0.875rem; color: rgba(235,235,245,0.7); }
+    .check-list .fa-check { color: #30d158; }
+    .check-list .fa-times { color: rgba(255,255,255,0.2); }
+  </style>
+</head>
+<body>
+  <canvas id="bg-canvas" data-preset="particles" data-color="#007AFF"></canvas>
+  <div class="page-wrap relative z-10">
+    <nav class="sticky top-0 z-50 flex items-center justify-between px-6 h-16 border-b" style="background:rgba(28,28,30,0.75);border-color:rgba(255,255,255,0.08);backdrop-filter:blur(20px)">
+      <a href="../index.html" class="flex items-center gap-2 font-bold text-white text-lg" style="font-family:'Pacifico',cursive">Fluxora</a>
+      <a href="../index.html" class="text-sm text-primary font-medium"><i class="fas fa-arrow-left mr-1"></i> Back</a>
+    </nav>
+
+    <div class="max-w-6xl mx-auto px-6 py-16">
+      <div class="text-center mb-16">
+        <h1 class="text-4xl font-extrabold mb-4">Simple, One-Time Pricing</h1>
+        <p class="text-lg" style="color:rgba(235,235,245,0.6)">Pay once, use forever. No subscriptions. All plans include lifetime access.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+
+        <div class="pricing-card">
+          <h3 class="text-lg font-bold mb-2">Free</h3>
+          <div class="pricing-price text-white mb-3">$0</div>
+          <p class="text-sm mb-6" style="color:rgba(235,235,245,0.5)">1 trial at standard quality</p>
+          <ul class="check-list text-left mb-6">
+            <li><i class="fas fa-check"></i> All tools available</li>
+            <li><i class="fas fa-check"></i> Standard quality</li>
+            <li><i class="fas fa-check"></i> No watermarks</li>
+            <li><i class="fas fa-times"></i> Ads displayed</li>
+          </ul>
+          <button class="w-full py-2.5 rounded-button font-semibold text-sm" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.5)" disabled>Current</button>
+        </div>
+
+        <div class="pricing-card">
+          <h3 class="text-lg font-bold mb-2">Image</h3>
+          <div class="pricing-price text-primary mb-3">$0.99</div>
+          <p class="text-sm mb-6" style="color:rgba(235,235,245,0.5)">All image tools</p>
+          <ul class="check-list text-left mb-6">
+            <li><i class="fas fa-check"></i> All image conversions</li>
+            <li><i class="fas fa-check"></i> HD quality output</li>
+            <li><i class="fas fa-check"></i> Lifetime access</li>
+            <li><i class="fas fa-check"></i> Fewer ads</li>
+          </ul>
+          <button class="w-full py-2.5 rounded-button font-semibold text-sm bg-primary text-white">Buy Now</button>
+        </div>
+
+        <div class="pricing-card popular">
+          <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:#0A84FF;color:#fff;font-size:0.7rem;font-weight:700;padding:3px 14px;border-radius:99px;letter-spacing:0.05em">POPULAR</div>
+          <h3 class="text-lg font-bold mb-2">Image + PDF</h3>
+          <div class="pricing-price text-primary mb-3">$1.99</div>
+          <p class="text-sm mb-6" style="color:rgba(235,235,245,0.5)">Plus PDF tools</p>
+          <ul class="check-list text-left mb-6">
+            <li><i class="fas fa-check"></i> Everything in Image</li>
+            <li><i class="fas fa-check"></i> All PDF tools</li>
+            <li><i class="fas fa-check"></i> HD quality output</li>
+            <li><i class="fas fa-check"></i> Fewer ads</li>
+          </ul>
+          <button class="w-full py-2.5 rounded-button font-semibold text-sm bg-primary text-white">Buy Now</button>
+        </div>
+
+        <div class="pricing-card">
+          <h3 class="text-lg font-bold mb-2">+ Audio</h3>
+          <div class="pricing-price text-primary mb-3">$2.99</div>
+          <p class="text-sm mb-6" style="color:rgba(235,235,245,0.5)">Plus audio tools</p>
+          <ul class="check-list text-left mb-6">
+            <li><i class="fas fa-check"></i> Everything in Image+PDF</li>
+            <li><i class="fas fa-check"></i> All audio tools</li>
+            <li><i class="fas fa-check"></i> HD quality output</li>
+            <li><i class="fas fa-check"></i> Fewer ads</li>
+          </ul>
+          <button class="w-full py-2.5 rounded-button font-semibold text-sm bg-primary text-white">Buy Now</button>
+        </div>
+
+        <div class="pricing-card" style="background:linear-gradient(135deg,#4F46E5,#7C3AED);border-color:transparent">
+          <h3 class="text-lg font-bold mb-2 text-white">All Access</h3>
+          <div class="pricing-price text-white mb-3">$3.99</div>
+          <p class="text-sm mb-6" style="color:rgba(255,255,255,0.7)">Every tool, forever</p>
+          <ul class="check-list text-left mb-6">
+            <li style="color:rgba(255,255,255,0.85)"><i class="fas fa-check" style="color:#fff"></i> All image, PDF, audio tools</li>
+            <li style="color:rgba(255,255,255,0.85)"><i class="fas fa-check" style="color:#fff"></i> Video to GIF</li>
+            <li style="color:rgba(255,255,255,0.85)"><i class="fas fa-check" style="color:#fff"></i> Compression tools</li>
+            <li style="color:rgba(255,255,255,0.85)"><i class="fas fa-check" style="color:#fff"></i> Minimal ads</li>
+            <li style="color:rgba(255,255,255,0.85)"><i class="fas fa-check" style="color:#fff"></i> Future tools included</li>
+          </ul>
+          <button class="w-full py-2.5 rounded-button font-semibold text-sm bg-white text-indigo-600">Buy Now</button>
+        </div>
+
+      </div>
+    </div>
+
+    <footer class="border-t text-center py-8 text-xs space-x-6" style="border-color:rgba(255,255,255,0.06);color:rgba(235,235,245,0.35)">
+      <a href="../index.html" style="color:rgba(235,235,245,0.5)">Home</a>
+      <a href="privacy-policy.html" style="color:rgba(235,235,245,0.5)">Privacy Policy</a>
+      <a href="cookie-policy.html" style="color:rgba(235,235,245,0.5)">Cookie Policy</a>
+      <a href="terms.html" style="color:rgba(235,235,245,0.5)">Terms of Use</a>
+      <a href="contact.html" style="color:rgba(235,235,245,0.5)">Contact</a>
+      <p class="mt-2">&copy; 2026 Fluxora. All rights reserved.</p>
+    </footer>
+  </div>
+  <script src="../assets/js/three-background.js?v=2"></script>
+</body>
+</html>

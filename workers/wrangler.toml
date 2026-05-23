@@ -1,0 +1,29 @@
+name = "fluxora-worker"
+main = "worker.js"
+compatibility_date = "2025-01-01"
+
+# ── KV namespace for license storage ──
+# Step 1: Run `npx wrangler kv:namespace create LICENSES`
+# Step 2: Copy the ID from the output and paste it below:
+[[kv_namespaces]]
+binding = "LICENSES"
+id = "YOUR_KV_NAMESPACE_ID"  # Replace with actual ID
+
+# ── Secrets (set via CLI) ──
+# npx wrangler secret put HMAC_SECRET
+
+# ── Routes (for custom domain) ──
+# [[routes]]
+# pattern = "api.fluxora.com/*"
+# zone_name = "fluxora.com"
+
+[env.production]
+# Production KV namespace (create separately for production)
+# [[kv_namespaces]]
+# binding = "LICENSES"
+# id = "YOUR_PRODUCTION_KV_NAMESPACE_ID"
+
+# ── Observability ──
+[observability]
+enabled = true
+head_sampling_rate = 1

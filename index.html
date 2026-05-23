@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Fluxora — Free online file converter. Convert images, PDFs, audio & video instantly in your browser. No uploads, no registration, 100% private. Lifetime access from $1.99.">
+  <meta name="keywords" content="file converter, image converter, PDF converter, audio converter, video to GIF, online converter, free file conversion, browser converter, no upload, private conversion">
+  <meta name="author" content="Fluxora">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="Fluxora — Free Online File Converter | 100% Private">
+  <meta property="og:description" content="Convert images, PDFs, audio & video instantly in your browser. Nothing uploaded. Lifetime access from $1.99.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://fluxora.com">
+  <link rel="canonical" href="https://fluxora.com">
+  <meta property="og:image" content="https://fluxora.com/assets/images/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:site_name" content="Fluxora">
+  <meta property="og:locale" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Fluxora — Free Online File Converter | 100% Private">
+  <meta name="twitter:description" content="Convert images, PDFs, audio & video instantly in your browser. Nothing uploaded. Lifetime access from $0.99.">
+  <meta name="twitter:image" content="https://fluxora.com/assets/images/og-image.png">
+  <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+  <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">
+  <meta name="theme-color" content="#0A84FF">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Fluxora",
+    "url": "https://fluxora.com",
+    "description": "Free online file converter. Convert images, PDFs, audio & video instantly in your browser. 100% private, no uploads.",
+    "applicationCategory": "MultimediaApplication",
+    "operatingSystem": "All",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "author": {
+      "@type": "Organization",
+      "name": "Fluxora",
+      "url": "https://fluxora.com"
+    }
+  }
+  </script>
+  <title>Fluxora — Free Online File Converter | No Uploads, 100% Private</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Pacifico&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#007AFF',
+            secondary: '#FF2D55'
+          },
+          borderRadius: {
+            'none': '0px',
+            'sm': '2px',
+            DEFAULT: '4px',
+            'md': '8px',
+            'lg': '12px',
+            'xl': '16px',
+            '2xl': '20px',
+            '3xl': '24px',
+            'full': '9999px',
+            'button': '4px'
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="assets/css/style.css?v=13">
+  <!-- Browser check (must load first — before any rendering) -->
+  <script src="assets/js/browser-check.js?v=13"></script>
+  <!-- i18n must load early to avoid flash of untranslated text -->
+  <script src="assets/js/i18n.js?v=13"></script>
+</head>
+<body class="bg-black">
+
+  <!-- ====== Three.js Background Canvas ====== -->
+  <canvas id="bg-canvas" data-preset="particles" data-color="#007AFF"></canvas>
+
+  <!-- ============================================ -->
+  <!-- DASHBOARD PAGE                                -->
+  <!-- ============================================ -->
+  <div id="dashboard-page" class="min-h-screen bg-white relative z-10">
+
+    <!-- Top Navigation -->
+    <nav class="fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-200 glass-card z-50 flex items-center justify-between px-6">
+      <h1 class="text-xl font-bold text-black" style="font-family:'Pacifico',cursive">Fluxora</h1>
+      <div class="flex items-center space-x-4">
+        <span class="text-sm text-gray-600"><span data-i18n="nav.freecount">免费次数</span>: <span id="free-count" class="font-semibold">1</span></span>
+        <span id="premium-badge" class="hidden text-xs font-bold px-2 py-0.5 rounded-full" style="background:rgba(48,209,88,0.2);color:#30D158">PREMIUM</span>
+        <button class="text-primary text-sm font-medium whitespace-nowrap !rounded-button" onclick="showLicenseModal()" data-i18n="nav.license">我的权益</button>
+        <!-- Language Switcher -->
+        <div class="lang-switcher">
+          <button class="lang-btn" id="lang-toggle" aria-label="Switch language">
+            <i class="fas fa-globe"></i>
+            <span id="lang-current-label">中文</span>
+            <i class="fas fa-chevron-down lang-arrow"></i>
+          </button>
+          <div class="lang-dropdown" id="lang-dropdown">
+            <button class="lang-option" data-lang="zh">中文</button>
+            <button class="lang-option" data-lang="en">English</button>
+            <button class="lang-option" data-lang="fr">Français</button>
+            <button class="lang-option" data-lang="es">Español</button>
+            <button class="lang-option" data-lang="ja">日本語</button>
+            <button class="lang-option" data-lang="ko">한국어</button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="pt-16 pb-20">
+
+      <!-- Hero Section -->
+      <section class="py-12 px-6 bg-gradient-to-br from-blue-50 to-indigo-50">
+        <div class="max-w-6xl mx-auto text-center">
+          <h2 class="text-4xl font-bold text-black mb-4"><span data-i18n="hero.title1">转换任何文件，</span><br><span data-i18n="hero.title2">就在你的浏览器中</span></h2>
+          <p class="text-lg text-gray-600 max-w-2xl mx-auto" data-i18n="hero.subtitle">100% 私密。文件不会离开你的设备。转换图片、PDF、音频和视频——全部本地处理。</p>
+        </div>
+      </section>
+
+      <!-- Feature Grid -->
+      <section class="py-12 px-6">
+        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
+
+          <!-- Image Studio Card -->
+          <div class="bg-gradient-to-br from-blue-100 to-blue-50 rounded-3xl p-8 hover:shadow-lg transition-shadow cursor-pointer" onclick="showToolPage('image')">
+            <div class="w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center mb-4">
+              <i class="fas fa-image text-white text-2xl w-8 h-8 flex items-center justify-center"></i>
+            </div>
+            <h3 class="text-xl font-semibold text-black mb-2" data-i18n="tool.image">图片工坊</h3>
+            <p class="text-gray-600 mb-4" data-i18n="tool.imageDesc">支持 JPG、PNG、WebP 等多种格式互转，智能压缩优化</p>
+            <div class="space-y-2">
+              <div class="flex items-center text-sm text-gray-500"><i class="fas fa-check-circle text-green-500 mr-2 w-4 h-4 flex items-center justify-center"></i> <span data-i18n="feat.jpg2png">JPG 转 PNG</span></div>
+              <div class="flex items-center text-sm text-gray-500"><i class="fas fa-check-circle text-green-500 mr-2 w-4 h-4 flex items-center justify-center"></i> <span data-i18n="feat.png2jpg">PNG 转 JPG</span></div>
+              <div class="flex items-center text-sm text-gray-500"><i class="fas fa-check-circle text-green-500 mr-2 w-4 h-4 flex items-center justify-center"></i> <span data-i18n="feat.imgCompress">图片压缩</span></div>
+            </div>
+          </div>
+
+          <!-- PDF Master Card -->
+          <div class="bg-gradient-to-br from-red-100 to-red-50 rounded-3xl p-8 hover:shadow-lg transition-shadow cursor-pointer" onclick="showToolPage('pdf')">
+            <div class="w-16 h-16 bg-gradient-to-br from-red-400 to-red-600 rounded-2xl flex items-center justify-center mb-4">
+              <i class="fas fa-file-pdf text-white text-2xl w-8 h-8 flex items-center justify-center"></i>
+            </div>
+            <h3 class="text-xl font-semibold text-black mb-2" data-i18n="tool.pdf">PDF 助手</h3>
+            <p class="text-gray-600 mb-4" data-i18n="tool.pdfDesc">PDF 合并、拆分、转换，文档处理更高效</p>
+            <div class="space-y-2">
+              <div class="flex items-center text-sm text-gray-500"><i class="fas fa-check-circle text-green-500 mr-2 w-4 h-4 flex items-center justify-center"></i> <span data-i18n="feat.pdfMerge">PDF 合并</span></div>
+              <div class="flex items-center text-sm text-gray-500"><i class="fas fa-check-circle text-green-500 mr-2 w-4 h-4 flex items-center justify-center"></i> <span data-i18n="feat.pdfSplit">PDF 拆分</span></div>
+              <div class="flex items-center text-sm text-gray-500"><i class="fas fa-check-circle text-green-500 mr-2 w-4 h-4 flex items-center justify-center"></i> <span data-i18n="feat.docConv">文档转换</span></div>
+            </div>
+          </div>
+
+          <!-- Audio Lab Card -->
+          <div class="bg-gradient-to-br from-orange-100 to-orange-50 rounded-3xl p-8 hover:shadow-lg transition-shadow cursor-pointer" onclick="showToolPage('audio')">
+            <div class="w-16 h-16 bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl flex items-center justify-center mb-4">
+              <i class="fas fa-music text-white text-2xl w-8 h-8 flex items-center justify-center"></i>
+            </div>
+            <h3 class="text-xl font-semibold text-black mb-2" data-i18n="tool.audio">音频实验室</h3>
+            <p class="text-gray-600 mb-4" data-i18n="tool.audioDesc">MP3、WAV、AAC 等音频格式转换，音质无损</p>
+            <div class="space-y-2">
+              <div class="flex items-center text-sm text-gray-500"><i class="fas fa-check-circle text-green-500 mr-2 w-4 h-4 flex items-center justify-center"></i> <span data-i18n="feat.mp32wav">MP3 转 WAV</span></div>
+              <div class="flex items-center text-sm text-gray-500"><i class="fas fa-check-circle text-green-500 mr-2 w-4 h-4 flex items-center justify-center"></i> <span data-i18n="feat.wav2mp3">WAV 转 MP3</span></div>
+              <div class="flex items-center text-sm text-gray-500"><i class="fas fa-check-circle text-green-500 mr-2 w-4 h-4 flex items-center justify-center"></i> <span data-i18n="feat.audioCompress">音频压缩</span></div>
+            </div>
+          </div>
+
+          <!-- Video Factory Card -->
+          <div class="bg-gradient-to-br from-purple-100 to-purple-50 rounded-3xl p-8 hover:shadow-lg transition-shadow cursor-pointer" onclick="showToolPage('video')">
+            <div class="w-16 h-16 bg-gradient-to-br from-purple-400 to-purple-600 rounded-2xl flex items-center justify-center mb-4">
+              <i class="fas fa-video text-white text-2xl w-8 h-8 flex items-center justify-center"></i>
+            </div>
+            <h3 class="text-xl font-semibold text-black mb-2" data-i18n="tool.video">视频工厂</h3>
+            <p class="text-gray-600 mb-4" data-i18n="tool.videoDesc">视频转 GIF、压缩、格式转换，轻松处理视频文件</p>
+            <div class="space-y-2">
+              <div class="flex items-center text-sm text-gray-500"><i class="fas fa-check-circle text-green-500 mr-2 w-4 h-4 flex items-center justify-center"></i> <span data-i18n="feat.video2gif">视频转 GIF</span></div>
+              <div class="flex items-center text-sm text-gray-500"><i class="fas fa-check-circle text-green-500 mr-2 w-4 h-4 flex items-center justify-center"></i> <span data-i18n="feat.videoCompress">视频压缩</span></div>
+              <div class="flex items-center text-sm text-gray-500"><i class="fas fa-check-circle text-green-500 mr-2 w-4 h-4 flex items-center justify-center"></i> <span data-i18n="feat.formatConv">格式转换</span></div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Pricing Section -->
+      <section id="pricing-section" class="py-12 px-6 bg-gray-50">
+        <div class="max-w-4xl mx-auto text-center mb-12">
+          <h2 class="text-3xl font-bold text-black mb-4" data-i18n="section.pricing">灵活定价方案</h2>
+          <p class="text-gray-600" data-i18n="section.pricingSub">一次性付费，终身使用，无水印高清输出</p>
+        </div>
+        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+          <!-- Image Plan -->
+          <div class="bg-white rounded-2xl p-6 border border-gray-200">
+            <h3 class="text-lg font-semibold text-black mb-2" data-i18n="price.image">图片套餐</h3>
+            <div class="text-2xl font-bold text-primary mb-4">$0.99</div>
+            <ul class="space-y-2 text-sm text-gray-600">
+              <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2 w-4 h-4 flex items-center justify-center"></i> <span data-i18n="price.fAllImg">所有图片转换工具</span></li>
+              <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2 w-4 h-4 flex items-center justify-center"></i> <span data-i18n="price.fHD">高清无水印输出</span></li>
+              <li class="flex items-center"><i class="fas fa-times text-gray-400 mr-2 w-4 h-4 flex items-center justify-center"></i> <span data-i18n="price.fNoPDF">PDF 工具</span></li>
+              <li class="flex items-center"><i class="fas fa-times text-gray-400 mr-2 w-4 h-4 flex items-center justify-center"></i> <span data-i18n="price.fNoAudio">音频工具</span></li>
+              <li class="flex items-center"><i class="fas fa-times text-gray-400 mr-2 w-4 h-4 flex items-center justify-center"></i> <span data-i18n="price.fNoVideo">视频工具</span></li>
+            </ul>
+            <button class="w-full mt-6 bg-primary text-white py-2 px-4 rounded-button whitespace-nowrap !rounded-button" onclick="handleBuyClick('image')" data-i18n="price.buy">立即购买</button>
+          </div>
+
+          <!-- PDF Plan -->
+          <div class="bg-white rounded-2xl p-6 border border-gray-200">
+            <h3 class="text-lg font-semibold text-black mb-2" data-i18n="price.pdf">PDF 套餐</h3>
+            <div class="text-2xl font-bold text-primary mb-4">$1.99</div>
+            <ul class="space-y-2 text-sm text-gray-600">
+              <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2 w-4 h-4 flex items-center justify-center"></i> <span data-i18n="price.fImgPDF">图片 + PDF 工具</span></li>
+              <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2 w-4 h-4 flex items-center justify-center"></i> <span data-i18n="price.fHD">高清无水印输出</span></li>
+              <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2 w-4 h-4 flex items-center justify-center"></i> <span data-i18n="price.fMerge">PDF 合并拆分</span></li>
+              <li class="flex items-center"><i class="fas fa-times text-gray-400 mr-2 w-4 h-4 flex items-center justify-center"></i> <span data-i18n="price.fNoAudio">音频工具</span></li>
+              <li class="flex items-center"><i class="fas fa-times text-gray-400 mr-2 w-4 h-4 flex items-center justify-center"></i> <span data-i18n="price.fNoVideo">视频工具</span></li>
+            </ul>
+            <button class="w-full mt-6 bg-primary text-white py-2 px-4 rounded-button whitespace-nowrap !rounded-button" onclick="handleBuyClick('image_pdf')" data-i18n="price.buy">立即购买</button>
+          </div>
+
+          <!-- Audio Plan -->
+          <div class="bg-white rounded-2xl p-6 border border-gray-200">
+            <h3 class="text-lg font-semibold text-black mb-2" data-i18n="price.audio">音频套餐</h3>
+            <div class="text-2xl font-bold text-primary mb-4">$2.99</div>
+            <ul class="space-y-2 text-sm text-gray-600">
+              <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2 w-4 h-4 flex items-center justify-center"></i> <span data-i18n="price.fAll3">图片 + PDF + 音频工具</span></li>
+              <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2 w-4 h-4 flex items-center justify-center"></i> <span data-i18n="price.fHD">高清无水印输出</span></li>
+              <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2 w-4 h-4 flex items-center justify-center"></i> <span data-i18n="price.fAudioConv">音频格式转换</span></li>
+              <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2 w-4 h-4 flex items-center justify-center"></i> <span data-i18n="price.fAudioComp">音频压缩</span></li>
+              <li class="flex items-center"><i class="fas fa-times text-gray-400 mr-2 w-4 h-4 flex items-center justify-center"></i> <span data-i18n="price.fNoVideo">视频工具</span></li>
+            </ul>
+            <button class="w-full mt-6 bg-primary text-white py-2 px-4 rounded-button whitespace-nowrap !rounded-button" onclick="handleBuyClick('audio')" data-i18n="price.buy">立即购买</button>
+          </div>
+
+          <!-- All Access Plan -->
+          <div class="bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl p-6 text-white">
+            <h3 class="text-lg font-semibold mb-2" data-i18n="price.all">全能套餐</h3>
+            <div class="text-2xl font-bold mb-4">$3.99</div>
+            <ul class="space-y-2 text-sm opacity-90">
+              <li class="flex items-center"><i class="fas fa-check text-white mr-2 w-4 h-4 flex items-center justify-center"></i> <span data-i18n="price.fAll">所有工具解锁</span></li>
+              <li class="flex items-center"><i class="fas fa-check text-white mr-2 w-4 h-4 flex items-center justify-center"></i> <span data-i18n="price.fHD">高清无水印输出</span></li>
+              <li class="flex items-center"><i class="fas fa-check text-white mr-2 w-4 h-4 flex items-center justify-center"></i> <span data-i18n="price.fGIF">视频转 GIF</span></li>
+              <li class="flex items-center"><i class="fas fa-check text-white mr-2 w-4 h-4 flex items-center justify-center"></i> <span data-i18n="price.fVideoComp">视频压缩</span></li>
+              <li class="flex items-center"><i class="fas fa-check text-white mr-2 w-4 h-4 flex items-center justify-center"></i> <span data-i18n="price.fAllFeat">全部高级功能</span></li>
+            </ul>
+            <button class="w-full mt-6 bg-white text-blue-600 py-2 px-4 rounded-button whitespace-nowrap !rounded-button" onclick="handleBuyClick('all')" data-i18n="price.buy">立即购买</button>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Share CTA Section -->
+      <section class="py-12 px-6">
+        <div class="max-w-4xl mx-auto bg-gradient-to-r from-blue-500 to-purple-600 rounded-3xl p-8 text-white text-center">
+          <h2 class="text-2xl font-bold mb-4" data-i18n="share.title">分享获得更多使用次数</h2>
+          <p class="opacity-90 mb-2" data-i18n="share.desc">每天最多可获得 3 次免费高清使用机会</p>
+          <p class="opacity-70 mb-6 text-sm" data-i18n="share.hook">快分享给你正在为这些事情烦恼的朋友们吧！</p>
+          <button id="share-btn" class="bg-white text-blue-600 px-6 py-3 rounded-button whitespace-nowrap !rounded-button font-medium" onclick="shareForFree()" data-i18n="share.btn">立即分享获取</button>
+        </div>
+      </section>
+
+      <!-- Guides & Tutorials Section -->
+      <section class="py-12 px-6">
+        <div class="max-w-6xl mx-auto">
+          <div class="text-center mb-10">
+            <h2 class="text-3xl font-bold text-black mb-3" data-i18n="section.guides">Guides & Tutorials</h2>
+            <p class="text-gray-600" data-i18n="section.guidesSub">Learn how to get the most out of your file conversions</p>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            <a href="content/blog/png-vs-webp.html" class="block bg-gradient-to-br from-blue-100 to-blue-50 rounded-2xl p-6 hover:shadow-lg transition-shadow border border-white/5">
+              <span class="text-xs font-bold text-primary uppercase tracking-wider" data-i18n="guide.imgguide">Image Guide</span>
+              <h3 class="text-lg font-semibold text-black mt-2 mb-2" data-i18n="guide.pngvwebp">PNG vs WebP: Which Format Should You Use?</h3>
+            </a>
+            <a href="content/blog/pdf-to-jpg-guide.html" class="block bg-gradient-to-br from-red-100 to-red-50 rounded-2xl p-6 hover:shadow-lg transition-shadow border border-white/5">
+              <span class="text-xs font-bold text-red-500 uppercase tracking-wider" data-i18n="guide.pdftutorial">PDF Tutorial</span>
+              <h3 class="text-lg font-semibold text-black mt-2 mb-2" data-i18n="guide.pdftojpg">How to Convert PDF to JPG: Complete Guide</h3>
+            </a>
+            <a href="content/blog/audio-formats-compared.html" class="block bg-gradient-to-br from-orange-100 to-orange-50 rounded-2xl p-6 hover:shadow-lg transition-shadow border border-white/5">
+              <span class="text-xs font-bold text-orange-500 uppercase tracking-wider" data-i18n="guide.audioguide">Audio Guide</span>
+              <h3 class="text-lg font-semibold text-black mt-2 mb-2" data-i18n="guide.audio">MP3 vs WAV vs FLAC vs AAC: Ultimate Guide</h3>
+            </a>
+            <a href="content/blog/video-to-gif-howto.html" class="block bg-gradient-to-br from-purple-100 to-purple-50 rounded-2xl p-6 hover:shadow-lg transition-shadow border border-white/5">
+              <span class="text-xs font-bold text-purple-500 uppercase tracking-wider" data-i18n="guide.videotutorial">Video Tutorial</span>
+              <h3 class="text-lg font-semibold text-black mt-2 mb-2" data-i18n="guide.videotogif">How to Convert Video to GIF: Complete Guide</h3>
+            </a>
+            <a href="content/blog/image-compression-guide.html" class="block bg-gradient-to-br from-green-100 to-green-50 rounded-2xl p-6 hover:shadow-lg transition-shadow border border-white/5">
+              <span class="text-xs font-bold text-green-500 uppercase tracking-wider" data-i18n="guide.optimization">Optimization</span>
+              <h3 class="text-lg font-semibold text-black mt-2 mb-2" data-i18n="guide.compress">Complete Guide to Image Compression</h3>
+            </a>
+            <a href="content/blog/privacy-file-conversion.html" class="block bg-gradient-to-br from-teal-100 to-teal-50 rounded-2xl p-6 hover:shadow-lg transition-shadow border border-white/5">
+              <span class="text-xs font-bold text-teal-500 uppercase tracking-wider" data-i18n="guide.privacyTag">Privacy & Security</span>
+              <h3 class="text-lg font-semibold text-black mt-2 mb-2" data-i18n="guide.privacy">Why Browser-Based File Conversion Protects Your Privacy</h3>
+            </a>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Bottom Bar (Dashboard) -->
+    <footer class="fixed bottom-0 left-0 right-0 h-16 bg-white border-t border-gray-200 glass-card flex items-center justify-center gap-6">
+      <a href="pages/privacy-policy.html" class="text-xs" style="color:rgba(235,235,245,0.5)" data-i18n="footer.privacy">Privacy Policy</a>
+      <a href="pages/cookie-policy.html" class="text-xs" style="color:rgba(235,235,245,0.5)" data-i18n="footer.cookie">Cookie Policy</a>
+      <a href="pages/terms.html" class="text-xs" style="color:rgba(235,235,245,0.5)" data-i18n="footer.terms">Terms of Use</a>
+      <a href="pages/contact.html" class="text-xs" style="color:rgba(235,235,245,0.5)" data-i18n="footer.contact">Contact</a>
+      <span class="text-xs text-gray-500">&copy; 2026 Fluxora</span>
+    </footer>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- TOOL PAGES CONTAINER                         -->
+  <!-- ============================================ -->
+  <div id="tool-pages" class="hidden relative z-10">
+
+    <!-- ====== Image Tool Page ====== -->
+    <div id="image-page" class="min-h-screen bg-white hidden">
+      <nav class="fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-200 glass-card z-50 flex items-center px-6">
+        <button class="text-primary text-lg mr-4" onclick="showDashboard()"><i class="fas fa-arrow-left"></i></button>
+        <h1 class="text-lg font-semibold text-black" data-i18n="toolpage.image">图片转换工具</h1>
+      </nav>
+
+      <div class="pt-16 pb-24">
+        <!-- Format Selector -->
+        <section class="py-4 px-6">
+          <div class="max-w-2xl mx-auto">
+            <p class="text-xs font-semibold uppercase tracking-wider mb-3" style="color:rgba(235,235,245,0.5)" data-i18n="format.label">
+              选择输出格式
+              <span id="image-detected-tag" class="detected-tag hidden" style="margin-left:8px"></span>
+            </p>
+            <div class="format-check-list" id="image-format-grid" data-tool="image" style="--seg-accent:#007AFF">
+              <button class="format-check-item checked" data-format="png"><span class="format-check-box"><i class="fas fa-check"></i></span><span class="format-check-label">PNG</span></button>
+              <button class="format-check-item" data-format="jpg"><span class="format-check-box"><i class="fas fa-check"></i></span><span class="format-check-label">JPG</span></button>
+              <button class="format-check-item" data-format="webp"><span class="format-check-box"><i class="fas fa-check"></i></span><span class="format-check-label">WebP</span></button>
+              <button class="format-check-item" data-format="avif"><span class="format-check-box"><i class="fas fa-check"></i></span><span class="format-check-label">AVIF</span></button>
+              <button class="format-check-item" data-format="bmp"><span class="format-check-box"><i class="fas fa-check"></i></span><span class="format-check-label">BMP</span></button>
+              <button class="format-check-item" data-format="svg"><span class="format-check-box"><i class="fas fa-check"></i></span><span class="format-check-label">SVG</span></button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Upload Area -->
+        <section class="py-12 px-6">
+          <div class="max-w-2xl mx-auto">
+            <div class="upload-area rounded-2xl p-12 text-center border-2 border-dashed border-gray-300 bg-gray-50" id="image-dropzone">
+              <i class="fas fa-cloud-upload-alt text-gray-400 text-4xl mb-4 w-12 h-12 flex items-center justify-center mx-auto"></i>
+              <h3 class="text-xl font-semibold text-black mb-2" data-i18n="upload.drop">点击或拖拽文件至此</h3>
+              <p class="text-gray-500 mb-6" data-i18n="upload.supportedImg">支持 JPG、PNG、WebP 等多种格式</p>
+              <input type="file" id="image-upload" class="hidden" multiple accept="image/*">
+              <button class="bg-primary text-white px-6 py-3 rounded-button whitespace-nowrap !rounded-button" onclick="document.getElementById('image-upload').click()"><span data-i18n="upload.select">选择文件</span></button>
+            </div>
+          </div>
+        </section>
+
+        <!-- File Queue -->
+        <section class="py-1 px-6">
+          <div class="file-queue max-w-2xl mx-auto" id="image-file-queue">
+            <div class="file-queue-header">
+              <span class="file-queue-title" data-i18n="queue.title">已选文件</span>
+              <button class="file-queue-clear" data-i18n="queue.clear" onclick="FileQueue.clear('image')">清空</button>
+            </div>
+            <div class="file-queue-list" id="image-file-list"></div>
+          </div>
+        </section>
+
+        <!-- Processing Area -->
+        <section id="image-processing" class="py-6 px-6 hidden">
+          <div class="max-w-2xl mx-auto text-center">
+            <div class="relative inline-block">
+              <svg class="progress-ring w-24 h-24" viewBox="0 0 100 100">
+                <circle class="progress-ring-bg" stroke="#e5e7eb" stroke-width="8" fill="transparent" r="40" cx="50" cy="50"></circle>
+                <circle class="progress-ring-circle" stroke="#007AFF" stroke-width="8" fill="transparent" r="40" cx="50" cy="50" stroke-dasharray="251.2" stroke-dashoffset="251.2"></circle>
+              </svg>
+              <div class="absolute inset-0 flex items-center justify-center">
+                <span class="progress-text text-lg font-semibold text-primary">0%</span>
+              </div>
+            </div>
+            <p class="mt-4 text-gray-600" data-i18n="upload.processing">正在转换中...</p>
+          </div>
+        </section>
+
+        <!-- Result Area -->
+        <section id="image-result" class="py-6 px-6 hidden">
+          <div class="max-w-2xl mx-auto">
+            <div class="bg-gray-50 rounded-2xl p-6">
+              <h3 class="text-lg font-semibold text-black mb-4" data-i18n="upload.complete">转换完成</h3>
+              <div class="result-list" id="image-result-list"></div>
+              <button class="result-dl-all" id="image-dl-all" onclick="downloadResult('image','hd')" class="hd-only-btn" data-i18n="upload.hdDlAll">下载全部文件</button>
+              <div class="flex space-x-3 mt-4">
+                <button class="flex-1 bg-gray-200 text-black py-2 px-4 rounded-button whitespace-nowrap !rounded-button" onclick="downloadResult('image','sd')"><span data-i18n="upload.sdDl">标清下载（消耗 1 次）</span></button>
+                <button class="flex-1 bg-primary text-white py-2 px-4 rounded-button whitespace-nowrap !rounded-button" onclick="downloadResult('image','hd')" class="hd-only-btn" ><span data-i18n="upload.hdDl">高清下载（仅限付费）</span></button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Bottom Action Bar -->
+      <div class="fixed bottom-0 left-0 right-0 h-16 bg-white border-t border-gray-200 glass-card flex items-center justify-center px-6">
+        <button class="w-full bg-primary text-white py-3 rounded-button whitespace-nowrap !rounded-button" onclick="startConversion('image')"><span data-i18n="upload.start">开始转换</span></button>
+      </div>
+    </div>
+
+    <!-- ====== PDF Tool Page ====== -->
+    <div id="pdf-page" class="min-h-screen bg-white hidden">
+      <nav class="fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-200 glass-card z-50 flex items-center px-6">
+        <button class="text-primary text-lg mr-4" onclick="showDashboard()"><i class="fas fa-arrow-left"></i></button>
+        <h1 class="text-lg font-semibold text-black" data-i18n="toolpage.pdf">PDF 转换工具</h1>
+      </nav>
+
+      <div class="pt-16 pb-24">
+        <!-- Mode Toggle + Format Selector -->
+        <section class="py-4 px-6">
+          <div class="max-w-2xl mx-auto">
+            <!-- Segmented Control -->
+            <div class="mode-toggle" id="pdf-mode-toggle">
+              <button class="mode-option active" data-mode="pdf2img" onclick="PDFMode.switch('pdf2img')">
+                <i class="fas fa-file-pdf"></i> <span data-i18n="pdf.modePdf2img">PDF → 图片</span>
+              </button>
+              <button class="mode-option" data-mode="img2pdf" onclick="PDFMode.switch('img2pdf')">
+                <i class="fas fa-images"></i> <span data-i18n="pdf.modeImg2pdf">图片 → PDF</span>
+              </button>
+            </div>
+
+            <p class="text-xs font-semibold uppercase tracking-wider mb-3" style="color:rgba(235,235,245,0.5)" data-i18n="format.label">
+              选择输出格式
+              <span id="pdf-detected-tag" class="detected-tag hidden" style="margin-left:8px"></span>
+            </p>
+            <!-- PDF→Image format grid -->
+            <div class="format-check-list" id="pdf-format-grid" data-tool="pdf" style="--seg-accent:#ef4444">
+              <button class="format-check-item" data-format="jpg"><span class="format-check-box"><i class="fas fa-check"></i></span><span class="format-check-label">JPG</span></button>
+              <button class="format-check-item checked" data-format="png"><span class="format-check-box"><i class="fas fa-check"></i></span><span class="format-check-label">PNG</span></button>
+            </div>
+            <!-- Image→PDF output (always PDF, hidden by default) -->
+            <div class="format-check-list hidden" id="pdf-img2pdf-grid" data-tool="pdf" style="--seg-accent:#ef4444">
+              <button class="format-check-item checked" data-format="pdf"><span class="format-check-box"><i class="fas fa-check"></i></span><span class="format-check-label">PDF</span></button>
+            </div>
+          </div>
+        </section>
+
+        <section class="py-12 px-6">
+          <div class="max-w-2xl mx-auto">
+            <div class="upload-area rounded-2xl p-12 text-center border-2 border-dashed border-gray-300 bg-gray-50" id="pdf-dropzone">
+              <i class="fas fa-file-pdf text-red-500 text-4xl mb-4 w-12 h-12 flex items-center justify-center mx-auto" id="pdf-upload-icon"></i>
+              <h3 class="text-xl font-semibold text-black mb-2" id="pdf-upload-title" data-i18n="upload.drop">点击或拖拽文件至此</h3>
+              <p class="text-gray-500 mb-6" id="pdf-upload-hint" data-i18n="pdf.hintPdf2img">上传 PDF 文件，转换为 JPG 或 PNG 图片</p>
+              <input type="file" id="pdf-upload" class="hidden" multiple accept=".pdf">
+              <button class="bg-primary text-white px-6 py-3 rounded-button whitespace-nowrap !rounded-button" onclick="document.getElementById('pdf-upload').click()"><span data-i18n="upload.select">选择文件</span></button>
+            </div>
+          </div>
+        </section>
+
+        <!-- File Queue -->
+        <section class="py-1 px-6">
+          <div class="file-queue max-w-2xl mx-auto" id="pdf-file-queue">
+            <div class="file-queue-header">
+              <span class="file-queue-title" data-i18n="queue.title">已选文件</span>
+              <button class="file-queue-clear" data-i18n="queue.clear" onclick="FileQueue.clear('pdf')">清空</button>
+            </div>
+            <div class="file-queue-list" id="pdf-file-list"></div>
+          </div>
+        </section>
+
+        <section id="pdf-processing" class="py-6 px-6 hidden">
+          <div class="max-w-2xl mx-auto text-center">
+            <div class="relative inline-block">
+              <svg class="progress-ring w-24 h-24" viewBox="0 0 100 100">
+                <circle class="progress-ring-bg" stroke="#e5e7eb" stroke-width="8" fill="transparent" r="40" cx="50" cy="50"></circle>
+                <circle class="progress-ring-circle" stroke="#007AFF" stroke-width="8" fill="transparent" r="40" cx="50" cy="50" stroke-dasharray="251.2" stroke-dashoffset="251.2"></circle>
+              </svg>
+              <div class="absolute inset-0 flex items-center justify-center">
+                <span class="progress-text text-lg font-semibold text-primary">0%</span>
+              </div>
+            </div>
+            <p class="mt-4 text-gray-600" data-i18n="upload.processing">正在处理中...</p>
+          </div>
+        </section>
+
+        <section id="pdf-result" class="py-6 px-6 hidden">
+          <div class="max-w-2xl mx-auto">
+            <div class="bg-gray-50 rounded-2xl p-6">
+              <h3 class="text-lg font-semibold text-black mb-4" data-i18n="upload.complete">处理完成</h3>
+              <div class="result-list" id="pdf-result-list"></div>
+              <button class="result-dl-all" id="pdf-dl-all" onclick="downloadResult('pdf','hd')" class="hd-only-btn" data-i18n="upload.hdDlAll">下载全部文件</button>
+              <div class="flex space-x-3 mt-4">
+                <button class="flex-1 bg-gray-200 text-black py-2 px-4 rounded-button whitespace-nowrap !rounded-button" onclick="downloadResult('pdf','sd')"><span data-i18n="upload.sdDl">标清下载（消耗 1 次）</span></button>
+                <button class="flex-1 bg-primary text-white py-2 px-4 rounded-button whitespace-nowrap !rounded-button" onclick="downloadResult('pdf','hd')" class="hd-only-btn"><span data-i18n="upload.hdDl">高清下载（仅限付费）</span></button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="fixed bottom-0 left-0 right-0 h-16 bg-white border-t border-gray-200 glass-card flex items-center justify-center px-6">
+        <button class="w-full bg-primary text-white py-3 rounded-button whitespace-nowrap !rounded-button" onclick="startConversion('pdf')"><span data-i18n="upload.start">开始转换</span></button>
+      </div>
+    </div>
+
+    <!-- ====== Audio Tool Page ====== -->
+    <div id="audio-page" class="min-h-screen bg-white hidden">
+      <nav class="fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-200 glass-card z-50 flex items-center px-6">
+        <button class="text-primary text-lg mr-4" onclick="showDashboard()"><i class="fas fa-arrow-left"></i></button>
+        <h1 class="text-lg font-semibold text-black" data-i18n="toolpage.audio">音频转换工具</h1>
+      </nav>
+
+      <div class="pt-16 pb-24">
+        <!-- Format Selector -->
+        <section class="py-4 px-6">
+          <div class="max-w-2xl mx-auto">
+            <p class="text-xs font-semibold uppercase tracking-wider mb-3" style="color:rgba(235,235,245,0.5)" data-i18n="format.label">
+              选择输出格式
+              <span id="audio-detected-tag" class="detected-tag hidden" style="margin-left:8px"></span>
+            </p>
+            <div class="format-check-list" id="audio-format-grid" data-tool="audio" style="--seg-accent:#f59e0b">
+              <button class="format-check-item checked" data-format="mp3"><span class="format-check-box"><i class="fas fa-check"></i></span><span class="format-check-label">MP3</span></button>
+              <button class="format-check-item" data-format="wav"><span class="format-check-box"><i class="fas fa-check"></i></span><span class="format-check-label">WAV</span></button>
+              <button class="format-check-item" data-format="ogg"><span class="format-check-box"><i class="fas fa-check"></i></span><span class="format-check-label">OGG</span></button>
+              <button class="format-check-item" data-format="aac"><span class="format-check-box"><i class="fas fa-check"></i></span><span class="format-check-label">AAC</span></button>
+              <button class="format-check-item" data-format="flac"><span class="format-check-box"><i class="fas fa-check"></i></span><span class="format-check-label">FLAC</span></button>
+              <button class="format-check-item" data-format="m4a"><span class="format-check-box"><i class="fas fa-check"></i></span><span class="format-check-label">M4A</span></button>
+              <button class="format-check-item" data-format="mp4"><span class="format-check-box"><i class="fas fa-check"></i></span><span class="format-check-label">MP4 Audio</span></button>
+            </div>
+          </div>
+        </section>
+
+        <section class="py-12 px-6">
+          <div class="max-w-2xl mx-auto">
+            <div class="upload-area rounded-2xl p-12 text-center border-2 border-dashed border-gray-300 bg-gray-50" id="audio-dropzone">
+              <i class="fas fa-music text-orange-500 text-4xl mb-4 w-12 h-12 flex items-center justify-center mx-auto"></i>
+              <h3 class="text-xl font-semibold text-black mb-2" data-i18n="upload.drop">点击或拖拽文件至此</h3>
+              <p class="text-gray-500 mb-6" data-i18n="upload.supportedAudio">支持 MP3、WAV、AAC、FLAC、M4A 等多种格式</p>
+              <input type="file" id="audio-upload" class="hidden" multiple accept="audio/*,.m4a,.aac,.flac,.ogg">
+              <button class="bg-primary text-white px-6 py-3 rounded-button whitespace-nowrap !rounded-button" onclick="document.getElementById('audio-upload').click()"><span data-i18n="upload.select">选择文件</span></button>
+            </div>
+          </div>
+        </section>
+
+        <!-- File Queue -->
+        <section class="py-1 px-6">
+          <div class="file-queue max-w-2xl mx-auto" id="audio-file-queue">
+            <div class="file-queue-header">
+              <span class="file-queue-title" data-i18n="queue.title">已选文件</span>
+              <button class="file-queue-clear" data-i18n="queue.clear" onclick="FileQueue.clear('audio')">清空</button>
+            </div>
+            <div class="file-queue-list" id="audio-file-list"></div>
+          </div>
+        </section>
+
+        <section id="audio-processing" class="py-6 px-6 hidden">
+          <div class="max-w-2xl mx-auto text-center">
+            <div class="relative inline-block">
+              <svg class="progress-ring w-24 h-24" viewBox="0 0 100 100">
+                <circle class="progress-ring-bg" stroke="#e5e7eb" stroke-width="8" fill="transparent" r="40" cx="50" cy="50"></circle>
+                <circle class="progress-ring-circle" stroke="#007AFF" stroke-width="8" fill="transparent" r="40" cx="50" cy="50" stroke-dasharray="251.2" stroke-dashoffset="251.2"></circle>
+              </svg>
+              <div class="absolute inset-0 flex items-center justify-center">
+                <span class="progress-text text-lg font-semibold text-primary">0%</span>
+              </div>
+            </div>
+            <p class="mt-4 text-gray-600" data-i18n="upload.processing">正在转换中...</p>
+          </div>
+        </section>
+
+        <section id="audio-result" class="py-6 px-6 hidden">
+          <div class="max-w-2xl mx-auto">
+            <div class="bg-gray-50 rounded-2xl p-6">
+              <h3 class="text-lg font-semibold text-black mb-4" data-i18n="upload.complete">转换完成</h3>
+              <div class="result-list" id="audio-result-list"></div>
+              <button class="result-dl-all" id="audio-dl-all" onclick="downloadResult('audio','hd')" class="hd-only-btn" data-i18n="upload.hdDlAll">下载全部文件</button>
+              <div class="flex space-x-3 mt-4">
+                <button class="flex-1 bg-gray-200 text-black py-2 px-4 rounded-button whitespace-nowrap !rounded-button" onclick="downloadResult('audio','sd')"><span data-i18n="upload.sdDl">标清下载（消耗 1 次）</span></button>
+                <button class="flex-1 bg-primary text-white py-2 px-4 rounded-button whitespace-nowrap !rounded-button" onclick="downloadResult('audio','hd')" class="hd-only-btn"><span data-i18n="upload.hdDl">高清下载（仅限付费）</span></button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="fixed bottom-0 left-0 right-0 h-16 bg-white border-t border-gray-200 glass-card flex items-center justify-center px-6">
+        <button class="w-full bg-primary text-white py-3 rounded-button whitespace-nowrap !rounded-button" onclick="startConversion('audio')"><span data-i18n="upload.start">开始转换</span></button>
+      </div>
+    </div>
+
+    <!-- ====== Video Tool Page ====== -->
+    <div id="video-page" class="min-h-screen bg-white hidden">
+      <nav class="fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-200 glass-card z-50 flex items-center px-6">
+        <button class="text-primary text-lg mr-4" onclick="showDashboard()"><i class="fas fa-arrow-left"></i></button>
+        <h1 class="text-lg font-semibold text-black" data-i18n="toolpage.video">视频转换工具</h1>
+      </nav>
+
+      <div class="pt-16 pb-24">
+        <!-- Format Selector -->
+        <section class="py-4 px-6">
+          <div class="max-w-2xl mx-auto">
+            <p class="text-xs font-semibold uppercase tracking-wider mb-3" style="color:rgba(235,235,245,0.5)" data-i18n="format.label">
+              选择输出格式
+              <span id="video-detected-tag" class="detected-tag hidden" style="margin-left:8px"></span>
+            </p>
+            <div class="format-check-list" id="video-format-grid" data-tool="video" style="--seg-accent:#8b5cf6">
+              <button class="format-check-item checked" data-format="gif"><span class="format-check-box"><i class="fas fa-check"></i></span><span class="format-check-label">GIF</span></button>
+              <button class="format-check-item" data-format="mp4"><span class="format-check-box"><i class="fas fa-check"></i></span><span class="format-check-label">MP4</span></button>
+              <button class="format-check-item" data-format="webm"><span class="format-check-box"><i class="fas fa-check"></i></span><span class="format-check-label">WebM</span></button>
+            </div>
+          </div>
+        </section>
+
+        <section class="py-12 px-6">
+          <div class="max-w-2xl mx-auto">
+            <div class="upload-area rounded-2xl p-12 text-center border-2 border-dashed border-gray-300 bg-gray-50" id="video-dropzone">
+              <i class="fas fa-video text-purple-500 text-4xl mb-4 w-12 h-12 flex items-center justify-center mx-auto"></i>
+              <h3 class="text-xl font-semibold text-black mb-2" data-i18n="upload.drop">点击或拖拽文件至此</h3>
+              <p class="text-gray-500 mb-6" data-i18n="upload.supportedVideo">支持 MP4、MOV、AVI、GIF 等多种格式</p>
+              <input type="file" id="video-upload" class="hidden" multiple accept="video/*,.gif,image/gif">
+              <button class="bg-primary text-white px-6 py-3 rounded-button whitespace-nowrap !rounded-button" onclick="document.getElementById('video-upload').click()"><span data-i18n="upload.select">选择文件</span></button>
+            </div>
+          </div>
+        </section>
+
+        <!-- File Queue -->
+        <section class="py-1 px-6">
+          <div class="file-queue max-w-2xl mx-auto" id="video-file-queue">
+            <div class="file-queue-header">
+              <span class="file-queue-title" data-i18n="queue.title">已选文件</span>
+              <button class="file-queue-clear" data-i18n="queue.clear" onclick="FileQueue.clear('video')">清空</button>
+            </div>
+            <div class="file-queue-list" id="video-file-list"></div>
+          </div>
+        </section>
+
+        <section id="video-processing" class="py-6 px-6 hidden">
+          <div class="max-w-2xl mx-auto text-center">
+            <div class="relative inline-block">
+              <svg class="progress-ring w-24 h-24" viewBox="0 0 100 100">
+                <circle class="progress-ring-bg" stroke="#e5e7eb" stroke-width="8" fill="transparent" r="40" cx="50" cy="50"></circle>
+                <circle class="progress-ring-circle" stroke="#007AFF" stroke-width="8" fill="transparent" r="40" cx="50" cy="50" stroke-dasharray="251.2" stroke-dashoffset="251.2"></circle>
+              </svg>
+              <div class="absolute inset-0 flex items-center justify-center">
+                <span class="progress-text text-lg font-semibold text-primary">0%</span>
+              </div>
+            </div>
+            <p class="mt-4 text-gray-600" data-i18n="upload.processing">正在转换中...</p>
+          </div>
+        </section>
+
+        <section id="video-result" class="py-6 px-6 hidden">
+          <div class="max-w-2xl mx-auto">
+            <div class="bg-gray-50 rounded-2xl p-6">
+              <h3 class="text-lg font-semibold text-black mb-4" data-i18n="upload.complete">转换完成</h3>
+              <div class="result-list" id="video-result-list"></div>
+              <button class="result-dl-all" id="video-dl-all" onclick="downloadResult('video','hd')" class="hd-only-btn" data-i18n="upload.hdDlAll">下载全部文件</button>
+              <div class="flex space-x-3 mt-4">
+                <button class="flex-1 bg-gray-200 text-black py-2 px-4 rounded-button whitespace-nowrap !rounded-button" onclick="downloadResult('video','sd')"><span data-i18n="upload.sdDl">标清下载（消耗 1 次）</span></button>
+                <button class="flex-1 bg-primary text-white py-2 px-4 rounded-button whitespace-nowrap !rounded-button" onclick="downloadResult('video','hd')" class="hd-only-btn"><span data-i18n="upload.hdDl">高清下载（仅限付费）</span></button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="fixed bottom-0 left-0 right-0 h-16 bg-white border-t border-gray-200 glass-card flex items-center justify-center px-6">
+        <button class="w-full bg-primary text-white py-3 rounded-button whitespace-nowrap !rounded-button" onclick="startConversion('video')"><span data-i18n="upload.start">开始转换</span></button>
+      </div>
+    </div>
+
+    <!-- ====== Compress Tool Page ====== -->
+    <div id="compress-page" class="min-h-screen bg-white hidden">
+      <nav class="fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-200 glass-card z-50 flex items-center px-6">
+        <button class="text-primary text-lg mr-4" onclick="showDashboard()"><i class="fas fa-arrow-left"></i></button>
+        <h1 class="text-lg font-semibold text-black" data-i18n="toolpage.compress">压缩工具</h1>
+      </nav>
+      <div class="pt-16 pb-24">
+        <section class="py-4 px-6">
+          <div class="max-w-2xl mx-auto">
+            <p class="text-xs font-semibold uppercase tracking-wider mb-3" style="color:rgba(235,235,245,0.5)" data-i18n="format.label">选择输出格式<span id="compress-detected-tag" class="detected-tag hidden" style="margin-left:8px"></span></p>
+            <div class="format-check-list" id="compress-format-grid" data-tool="compress" style="--seg-accent:#8b5cf6">
+              <button class="format-check-item checked" data-format="compressed"><span class="format-check-box"><i class="fas fa-check"></i></span><span class="format-check-label">Compressed</span></button>
+            </div>
+          </div>
+        </section>
+        <section class="py-12 px-6">
+          <div class="max-w-2xl mx-auto">
+            <div class="upload-area rounded-2xl p-12 text-center border-2 border-dashed border-gray-300 bg-gray-50" id="compress-dropzone">
+              <i class="fas fa-compress-arrows-alt text-purple-500 text-4xl mb-4 w-12 h-12 flex items-center justify-center mx-auto"></i>
+              <h3 class="text-xl font-semibold text-black mb-2" data-i18n="upload.compressDrop">选择要压缩的文件</h3>
+              <p class="text-gray-500 mb-6">支持图片 (JPG/PNG/WebP) 和视频 (MP4/MOV)</p>
+              <input type="file" id="compress-upload" class="hidden" accept="image/*,video/*">
+              <button class="bg-primary text-white px-6 py-3 rounded-button whitespace-nowrap !rounded-button" onclick="document.getElementById('compress-upload').click()"><span data-i18n="upload.select">选择文件</span></button>
+            </div>
+          </div>
+        </section>
+        <!-- File Queue -->
+        <section class="py-1 px-6">
+          <div class="file-queue max-w-2xl mx-auto" id="compress-file-queue">
+            <div class="file-queue-header">
+              <span class="file-queue-title" data-i18n="queue.title">已选文件</span>
+              <button class="file-queue-clear" data-i18n="queue.clear" onclick="FileQueue.clear('compress')">清空</button>
+            </div>
+            <div class="file-queue-list" id="compress-file-list"></div>
+          </div>
+        </section>
+
+        <section id="compress-processing" class="py-6 px-6 hidden">
+          <div class="max-w-2xl mx-auto text-center">
+            <div class="relative inline-block">
+              <svg class="progress-ring w-24 h-24" viewBox="0 0 100 100">
+                <circle class="progress-ring-bg" stroke="#e5e7eb" stroke-width="8" fill="transparent" r="40" cx="50" cy="50"></circle>
+                <circle class="progress-ring-circle" stroke="#8b5cf6" stroke-width="8" fill="transparent" r="40" cx="50" cy="50" stroke-dasharray="251.2" stroke-dashoffset="251.2"></circle>
+              </svg>
+              <div class="absolute inset-0 flex items-center justify-center"><span class="progress-text text-lg font-semibold text-purple-500">0%</span></div>
+            </div>
+            <p class="mt-4 text-gray-600" data-i18n="processing.compress">正在压缩中...</p>
+          </div>
+        </section>
+        <section id="compress-result" class="py-6 px-6 hidden">
+          <div class="max-w-2xl mx-auto">
+            <div class="bg-gray-50 rounded-2xl p-6">
+              <h3 class="text-lg font-semibold text-black mb-4" data-i18n="result.compressed">压缩完成</h3>
+              <div class="result-list" id="compress-result-list"></div>
+              <button class="result-dl-all" id="compress-dl-all" onclick="downloadResult('compress','hd')" class="hd-only-btn" data-i18n="upload.hdDlAll">下载全部文件</button>
+              <div class="flex space-x-3 mt-4">
+                <button class="flex-1 bg-gray-200 text-black py-2 px-4 rounded-button whitespace-nowrap !rounded-button" onclick="downloadResult('compress','sd')"><span data-i18n="upload.sdDl">标清下载（消耗 1 次）</span></button>
+                <button class="flex-1 bg-primary text-white py-2 px-4 rounded-button whitespace-nowrap !rounded-button" onclick="downloadResult('compress','hd')" class="hd-only-btn"><span data-i18n="upload.hdDl">高清下载（仅限付费）</span></button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+      <div class="fixed bottom-0 left-0 right-0 h-16 bg-white border-t border-gray-200 glass-card flex items-center justify-center px-6">
+        <button class="w-full bg-primary text-white py-3 rounded-button whitespace-nowrap !rounded-button" onclick="startConversion('compress')"><span data-i18n="btn.startCompress">开始压缩</span></button>
+      </div>
+    </div>
+
+    <!-- ====== PDF Merge Tool Page ====== -->
+    <div id="pdf-merge-page" class="min-h-screen bg-white hidden">
+      <nav class="fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-200 glass-card z-50 flex items-center px-6">
+        <button class="text-primary text-lg mr-4" onclick="showDashboard()"><i class="fas fa-arrow-left"></i></button>
+        <h1 class="text-lg font-semibold text-black" data-i18n="toolpage.pdfmerge">PDF 合并</h1>
+      </nav>
+      <div class="pt-16 pb-24">
+        <section class="py-12 px-6">
+          <div class="max-w-2xl mx-auto">
+            <div class="upload-area rounded-2xl p-12 text-center border-2 border-dashed border-gray-300 bg-gray-50" id="pdf-merge-dropzone">
+              <i class="fas fa-object-group text-red-500 text-4xl mb-4 w-12 h-12 flex items-center justify-center mx-auto"></i>
+              <h3 class="text-xl font-semibold text-black mb-2" data-i18n="upload.mergeDrop">选择多个 PDF 文件</h3>
+              <p class="text-gray-500 mb-6">支持合并多个 PDF 为单个文件，按选择顺序排列</p>
+              <input type="file" id="pdf-merge-upload" class="hidden" multiple accept=".pdf">
+              <button class="bg-primary text-white px-6 py-3 rounded-button whitespace-nowrap !rounded-button" onclick="document.getElementById('pdf-merge-upload').click()"><span data-i18n="upload.select">选择文件</span></button>
+            </div>
+          </div>
+        </section>
+
+        <!-- File Queue -->
+        <section class="py-1 px-6">
+          <div class="file-queue max-w-2xl mx-auto" id="pdf-merge-file-queue">
+            <div class="file-queue-header">
+              <span class="file-queue-title" data-i18n="queue.title">已选文件</span>
+              <button class="file-queue-clear" data-i18n="queue.clear" onclick="FileQueue.clear('pdf-merge')">清空</button>
+            </div>
+            <div class="file-queue-list" id="pdf-merge-file-list"></div>
+          </div>
+        </section>
+
+        <section id="pdf-merge-processing" class="py-6 px-6 hidden">
+          <div class="max-w-2xl mx-auto text-center">
+            <div class="relative inline-block">
+              <svg class="progress-ring w-24 h-24" viewBox="0 0 100 100">
+                <circle class="progress-ring-bg" stroke="#e5e7eb" stroke-width="8" fill="transparent" r="40" cx="50" cy="50"></circle>
+                <circle class="progress-ring-circle" stroke="#ef4444" stroke-width="8" fill="transparent" r="40" cx="50" cy="50" stroke-dasharray="251.2" stroke-dashoffset="251.2"></circle>
+              </svg>
+              <div class="absolute inset-0 flex items-center justify-center"><span class="progress-text text-lg font-semibold text-red-500">0%</span></div>
+            </div>
+            <p class="mt-4 text-gray-600" data-i18n="processing.merge">正在合并中...</p>
+          </div>
+        </section>
+        <section id="pdf-merge-result" class="py-6 px-6 hidden">
+          <div class="max-w-2xl mx-auto">
+            <div class="bg-gray-50 rounded-2xl p-6">
+              <h3 class="text-lg font-semibold text-black mb-4" data-i18n="result.merged">合并完成</h3>
+              <div class="result-list" id="pdf-merge-result-list"></div>
+              <button class="result-dl-all" id="pdf-merge-dl-all" onclick="downloadResult('pdf-merge','hd')" class="hd-only-btn" data-i18n="upload.hdDlAll">下载全部文件</button>
+              <button class="w-full bg-primary text-white py-2 px-4 rounded-button whitespace-nowrap !rounded-button mt-3" onclick="downloadResult('pdf-merge','hd')" class="hd-only-btn"><span data-i18n="btn.downloadMerged">下载合并文件</span></button>
+            </div>
+          </div>
+        </section>
+      </div>
+      <div class="fixed bottom-0 left-0 right-0 h-16 bg-white border-t border-gray-200 glass-card flex items-center justify-center px-6">
+        <button class="w-full bg-primary text-white py-3 rounded-button whitespace-nowrap !rounded-button" onclick="startConversion('pdf-merge')"><span data-i18n="btn.startMerge">开始合并</span></button>
+      </div>
+    </div>
+
+    <!-- ====== PDF Split Tool Page ====== -->
+    <div id="pdf-split-page" class="min-h-screen bg-white hidden">
+      <nav class="fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-200 glass-card z-50 flex items-center px-6">
+        <button class="text-primary text-lg mr-4" onclick="showDashboard()"><i class="fas fa-arrow-left"></i></button>
+        <h1 class="text-lg font-semibold text-black" data-i18n="toolpage.pdfsplit">PDF 拆分</h1>
+      </nav>
+      <div class="pt-16 pb-24">
+        <section class="py-12 px-6">
+          <div class="max-w-2xl mx-auto">
+            <div class="upload-area rounded-2xl p-12 text-center border-2 border-dashed border-gray-300 bg-gray-50" id="pdf-split-dropzone">
+              <i class="fas fa-cut text-red-500 text-4xl mb-4 w-12 h-12 flex items-center justify-center mx-auto"></i>
+              <h3 class="text-xl font-semibold text-black mb-2" data-i18n="upload.splitDrop">选择 PDF 文件</h3>
+              <p class="text-gray-500 mb-6">将 PDF 拆分为多个单独页面文件</p>
+              <input type="file" id="pdf-split-upload" class="hidden" accept=".pdf">
+              <button class="bg-primary text-white px-6 py-3 rounded-button whitespace-nowrap !rounded-button" onclick="document.getElementById('pdf-split-upload').click()"><span data-i18n="upload.select">选择文件</span></button>
+            </div>
+          </div>
+        </section>
+
+        <!-- File Queue -->
+        <section class="py-1 px-6">
+          <div class="file-queue max-w-2xl mx-auto" id="pdf-split-file-queue">
+            <div class="file-queue-header">
+              <span class="file-queue-title" data-i18n="queue.title">已选文件</span>
+              <button class="file-queue-clear" data-i18n="queue.clear" onclick="FileQueue.clear('pdf-split')">清空</button>
+            </div>
+            <div class="file-queue-list" id="pdf-split-file-list"></div>
+          </div>
+        </section>
+
+        <section id="pdf-split-processing" class="py-6 px-6 hidden">
+          <div class="max-w-2xl mx-auto text-center">
+            <div class="relative inline-block">
+              <svg class="progress-ring w-24 h-24" viewBox="0 0 100 100">
+                <circle class="progress-ring-bg" stroke="#e5e7eb" stroke-width="8" fill="transparent" r="40" cx="50" cy="50"></circle>
+                <circle class="progress-ring-circle" stroke="#ef4444" stroke-width="8" fill="transparent" r="40" cx="50" cy="50" stroke-dasharray="251.2" stroke-dashoffset="251.2"></circle>
+              </svg>
+              <div class="absolute inset-0 flex items-center justify-center"><span class="progress-text text-lg font-semibold text-red-500">0%</span></div>
+            </div>
+            <p class="mt-4 text-gray-600" data-i18n="processing.split">正在拆分中...</p>
+          </div>
+        </section>
+        <section id="pdf-split-result" class="py-6 px-6 hidden">
+          <div class="max-w-2xl mx-auto">
+            <div class="bg-gray-50 rounded-2xl p-6">
+              <h3 class="text-lg font-semibold text-black mb-4" data-i18n="result.split">拆分完成</h3>
+              <div class="result-list" id="pdf-split-result-list"></div>
+              <button class="result-dl-all" id="pdf-split-dl-all" onclick="downloadResult('pdf-split','hd')" class="hd-only-btn" data-i18n="upload.hdDlAll">下载全部文件</button>
+              <button class="w-full bg-primary text-white py-2 px-4 rounded-button whitespace-nowrap !rounded-button mt-3" onclick="downloadResult('pdf-split','hd')" class="hd-only-btn"><span data-i18n="btn.downloadSplit">下载拆分文件</span></button>
+            </div>
+          </div>
+        </section>
+      </div>
+      <div class="fixed bottom-0 left-0 right-0 h-16 bg-white border-t border-gray-200 glass-card flex items-center justify-center px-6">
+        <button class="w-full bg-primary text-white py-3 rounded-button whitespace-nowrap !rounded-button" onclick="startConversion('pdf-split')"><span data-i18n="btn.startSplit">开始拆分</span></button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ====== License Modal ====== -->
+  <div id="license-modal" class="fixed inset-0 z-[60] flex items-center justify-center hidden">
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="closeLicenseModal()"></div>
+    <div class="relative bg-white rounded-2xl p-8 max-w-md w-full mx-4 shadow-xl">
+      <h3 class="text-xl font-bold text-black mb-4">激活权益</h3>
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700 mb-2">输入激活码</label>
+        <input type="text" id="license-input" class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-primary" placeholder="XXXX-XXXX-XXXX-XXXX">
+      </div>
+      <div class="flex space-x-3">
+        <button class="flex-1 bg-gray-200 text-black py-2 px-4 rounded-button whitespace-nowrap !rounded-button" onclick="closeLicenseModal()">取消</button>
+        <button class="flex-1 bg-primary text-white py-2 px-4 rounded-button whitespace-nowrap !rounded-button" onclick="verifyLicense()">验证激活</button>
+      </div>
+      <p id="license-msg" class="text-sm text-center mt-4 hidden"></p>
+      <button id="license-clear-btn" class="hidden w-full mt-3 py-2 px-4 rounded-button whitespace-nowrap !rounded-button text-sm font-medium" style="background:rgba(255,69,58,0.12);color:#FF453A" onclick="ToolBox.deactivateLicense();closeLicenseModal();window.location.reload();">清除当前激活状态</button>
+    </div>
+  </div>
+
+  <!-- ====== Toast ====== -->
+  <div id="toast" class="fixed top-20 left-1/2 -translate-x-1/2 z-[70] bg-gray-900 text-white px-6 py-3 rounded-lg shadow-lg text-sm hidden transition-all duration-300"></div>
+
+  <!-- ====== Welcome Surprise Popup ====== -->
+  <div id="welcome-popup">
+    <div class="welcome-backdrop"></div>
+    <div class="welcome-card">
+      <div class="welcome-icon"><i class="fas fa-gift"></i></div>
+      <h2 class="welcome-title" data-i18n="welcome.title">感谢您选择Fluxora</h2>
+      <p class="welcome-subtitle" data-i18n="welcome.subtitle">赶快使用起来吧！</p>
+      <button class="welcome-btn" onclick="WelcomePopup.dismiss()" data-i18n="welcome.btn">开始使用</button>
+    </div>
+  </div>
+
+  <!-- ====== Scripts ====== -->
+  <script src="assets/js/license.js?v=13"></script>
+  <script src="assets/js/sharing.js?v=13"></script>
+  <script src="assets/js/watermark.js?v=13"></script>
+  <script src="assets/js/cookie-consent.js?v=13"></script>
+  <script src="assets/js/converter.js?v=13"></script>
+  <script src="assets/js/main.js?v=13"></script>
+  <script src="assets/js/three-background.js?v=13"></script>
+  <script src="assets/js/welcome-popup.js?v=13"></script>
+</body>
+</html>

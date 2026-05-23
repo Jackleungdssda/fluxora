@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>webToolBox Lite - 轻量级在线格式转换工具站</title>
+    <link href="https://static.mastergo.com/static/ai/resource/html/googleapis/css2" rel="stylesheet">
+    <script src="https://static.mastergo.com/static/ai/resource/html/tailwind/tailwind.js"></script>
+    <script>tailwind.config={theme:{extend:{colors:{primary:'#007AFF',secondary:'#FF2D55'},borderRadius:{'none':'0px','sm':'2px',DEFAULT:'4px','md':'8px','lg':'12px','xl':'16px','2xl':'20px','3xl':'24px','full':'9999px','button':'4px'}}}}</script>
+    <style>
+        body {
+            min-height: 1024px;
+            background-color: #f2f2f7;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+        .glass-card {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .upload-area {
+            border: 2px dashed #d1d1d6;
+        }
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+        .progress-ring-circle {
+            transition: stroke-dashoffset 0.35s;
+            transform-origin: 50% 50%;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Dashboard Page -->
+    <div id="dashboard-page" class="min-h-screen bg-white">
+        <!-- Top Navigation -->
+        <nav class="fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-200 glass-card z-50 flex items-center justify-between px-6">
+            <h1 class="text-xl font-bold text-black font-['Pacifico']">webToolBox Lite</h1>
+            <div class="flex items-center space-x-4">
+                <span class="text-sm text-gray-600">剩余次数: <span id="free-count" class="font-semibold">1</span>/5</span>
+                <button class="text-primary text-sm font-medium whitespace-nowrap !rounded-button">我的权益</button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="pt-16 pb-20">
+            <!-- Hero Section -->
+            <section class="py-12 px-6 bg-gradient-to-br from-blue-50 to-indigo-50">
+                <div class="max-w-6xl mx-auto text-center">
+                    <h2 class="text-4xl font-bold text-black mb-4">专业格式转换工具集</h2>
+                    <p class="text-lg text-gray-600 max-w-2xl mx-auto">一站式解决您的图片、PDF、音频、视频转换需求，高效便捷，品质保证</p>
+                </div>
+            </section>
+
+            <!-- Feature Grid -->
+            <section class="py-12 px-6">
+                <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Image Studio Card -->
+                    <div class="bg-gradient-to-br from-blue-100 to-blue-50 rounded-3xl p-8 hover:shadow-lg transition-shadow cursor-pointer" onclick="showToolPage('image')">
+                        <div class="w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center mb-4">
+                            <i class="fas fa-image text-white text-2xl w-8 h-8 flex items-center justify-center"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-black mb-2">图片工坊</h3>
+                        <p class="text-gray-600 mb-4">支持 JPG、PNG、WebP 等多种格式互转，智能压缩优化</p>
+                        <div class="space-y-2">
+                            <div class="flex items-center text-sm text-gray-500">
+                                <i class="fas fa-check-circle text-green-500 mr-2 w-4 h-4 flex items-center justify-center"></i>
+                                JPG 转 PNG
+                            </div>
+                            <div class="flex items-center text-sm text-gray-500">
+                                <i class="fas fa-check-circle text-green-500 mr-2 w-4 h-4 flex items-center justify-center"></i>
+                                PNG 转 JPG
+                            </div>
+                            <div class="flex items-center text-sm text-gray-500">
+                                <i class="fas fa-check-circle text-green-500 mr-2 w-4 h-4 flex items-center justify-center"></i>
+                                图片压缩
+                            </div>
+                        </div>
+                    </div>
+                    <!-- PDF Master Card -->
+                    <div class="bg-gradient-to-br from-red-100 to-red-50 rounded-3xl p-8 hover:shadow-lg transition-shadow cursor-pointer" onclick="showToolPage('pdf')">
+                        <div class="w-16 h-16 bg-gradient-to-br from-red-400 to-red-600 rounded-2xl flex items-center justify-center mb-4">
+                            <i class="fas fa-file-pdf text-white text-2xl w-8 h-8 flex items-center justify-center"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-black mb-2">PDF 助手</h3>
+                        <p class="text-gray-600 mb-4">PDF 合并、拆分、转换，文档处理更高效</p>
+                        <div class="space-y-2">
+                            <div class="flex items-center text-sm text-gray-500">
+                                <i class="fas fa-check-circle text-green-500 mr-2 w-4 h-4 flex items-center justify-center"></i>
+                                PDF 合并
+                            </div>
+                            <div class="flex items-center text-sm text-gray-500">
+                                <i class="fas fa-check-circle text-green-500 mr-2 w-4 h-4 flex items-center justify-center"></i>
+                                PDF 拆分
+                            </div>
+                            <div class="flex items-center text-sm text-gray-500">
+                                <i class="fas fa-check-circle text-green-500 mr-2 w-4 h-4 flex items-center justify-center"></i>
+                                文档转换
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Audio Lab Card -->
+                    <div class="bg-gradient-to-br from-orange-100 to-orange-50 rounded-3xl p-8 hover:shadow-lg transition-shadow cursor-pointer" onclick="showToolPage('audio')">
+                        <div class="w-16 h-16 bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl flex items-center justify-center mb-4">
+                            <i class="fas fa-music text-white text-2xl w-8 h-8 flex items-center justify-center"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-black mb-2">音频实验室</h3>
+                        <p class="text-gray-600 mb-4">MP3、WAV、AAC 等音频格式转换，音质无损</p>
+                        <div class="space-y-2">
+                            <div class="flex items-center text-sm text-gray-500">
+                                <i class="fas fa-check-circle text-green-500 mr-2 w-4 h-4 flex items-center justify-center"></i>
+                                MP3 转 WAV
+                            </div>
+                            <div class="flex items-center text-sm text-gray-500">
+                                <i class="fas fa-check-circle text-green-500 mr-2 w-4 h-4 flex items-center justify-center"></i>
+                                WAV 转 MP3
+                            </div>
+                            <div class="flex items-center text-sm text-gray-500">
+                                <i class="fas fa-check-circle text-green-500 mr-2 w-4 h-4 flex items-center justify-center"></i>
+                                音频压缩
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Video Factory Card -->
+                    <div class="bg-gradient-to-br from-purple-100 to-purple-50 rounded-3xl p-8 hover:shadow-lg transition-shadow cursor-pointer" onclick="showToolPage('video')">
+                        <div class="w-16 h-16 bg-gradient-to-br from-purple-400 to-purple-600 rounded-2xl flex items-center justify-center mb-4">
+                            <i class="fas fa-video text-white text-2xl w-8 h-8 flex items-center justify-center"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-black mb-2">视频工厂</h3>
+                        <p class="text-gray-600 mb-4">视频转 GIF、压缩、格式转换，轻松处理视频文件</p>
+                        <div class="space-y-2">
+                            <div class="flex items-center text-sm text-gray-500">
+                                <i class="fas fa-check-circle text-green-500 mr-2 w-4 h-4 flex items-center justify-center"></i>
+                                视频转 GIF
+                            </div>
+                            <div class="flex items-center text-sm text-gray-500">
+                                <i class="fas fa-check-circle text-green-500 mr-2 w-4 h-4 flex items-center justify-center"></i>
+                                视频压缩
+                            </div>
+                            <div class="flex items-center text-sm text-gray-500">
+                                <i class="fas fa-check-circle text-green-500 mr-2 w-4 h-4 flex items-center justify-center"></i>
+                                格式转换
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Pricing Section -->
+            <section class="py-12 px-6 bg-gray-50">
+                <div class="max-w-4xl mx-auto text-center mb-12">
+                    <h2 class="text-3xl font-bold text-black mb-4">灵活定价方案</h2>
+                    <p class="text-gray-600">一次性付费，终身使用，无水印高清输出</p>
+                </div>
+                <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Plan Cards -->
+                    <div class="bg-white rounded-2xl p-6 border border-gray-200">
+                        <h3 class="text-lg font-semibold text-black mb-2">图片套餐</h3>
+                        <div class="text-2xl font-bold text-primary mb-4">$1.99</div>
+                        <ul class="space-y-2 text-sm text-gray-600">
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2 w-4 h-4 flex items-center justify-center"></i> 所有图片转换工具</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2 w-4 h-4 flex items-center justify-center"></i> 高清无水印输出</li>
+                            <li class="flex items-center"><i class="fas fa-times text-gray-400 mr-2 w-4 h-4 flex items-center justify-center"></i> PDF 工具</li>
+                            <li class="flex items-center"><i class="fas fa-times text-gray-400 mr-2 w-4 h-4 flex items-center justify-center"></i> 音频工具</li>
+                            <li class="flex items-center"><i class="fas fa-times text-gray-400 mr-2 w-4 h-4 flex items-center justify-center"></i> 视频工具</li>
+                        </ul>
+                        <button class="w-full mt-6 bg-primary text-white py-2 px-4 rounded-button whitespace-nowrap !rounded-button">立即购买</button>
+                    </div>
+                    
+                    <div class="bg-white rounded-2xl p-6 border border-gray-200">
+                        <h3 class="text-lg font-semibold text-black mb-2">PDF 套餐</h3>
+                        <div class="text-2xl font-bold text-primary mb-4">$2.99</div>
+                        <ul class="space-y-2 text-sm text-gray-600">
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2 w-4 h-4 flex items-center justify-center"></i> 图片 + PDF 工具</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2 w-4 h-4 flex items-center justify-center"></i> 高清无水印输出</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2 w-4 h-4 flex items-center justify-center"></i> PDF 合并拆分</li>
+                            <li class="flex items-center"><i class="fas fa-times text-gray-400 mr-2 w-4 h-4 flex items-center justify-center"></i> 音频工具</li>
+                            <li class="flex items-center"><i class="fas fa-times text-gray-400 mr-2 w-4 h-4 flex items-center justify-center"></i> 视频工具</li>
+                        </ul>
+                        <button class="w-full mt-6 bg-primary text-white py-2 px-4 rounded-button whitespace-nowrap !rounded-button">立即购买</button>
+                    </div>
+                    
+                    <div class="bg-white rounded-2xl p-6 border border-gray-200">
+                        <h3 class="text-lg font-semibold text-black mb-2">音频套餐</h3>
+                        <div class="text-2xl font-bold text-primary mb-4">$3.99</div>
+                        <ul class="space-y-2 text-sm text-gray-600">
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2 w-4 h-4 flex items-center justify-center"></i> 图片 + PDF + 音频工具</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2 w-4 h-4 flex items-center justify-center"></i> 高清无水印输出</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2 w-4 h-4 flex items-center justify-center"></i> 音频格式转换</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2 w-4 h-4 flex items-center justify-center"></i> 音频压缩</li>
+                            <li class="flex items-center"><i class="fas fa-times text-gray-400 mr-2 w-4 h-4 flex items-center justify-center"></i> 视频工具</li>
+                        </ul>
+                        <button class="w-full mt-6 bg-primary text-white py-2 px-4 rounded-button whitespace-nowrap !rounded-button">立即购买</button>
+                    </div>
+                    
+                    <div class="bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl p-6 text-white">
+                        <h3 class="text-lg font-semibold mb-2">全能套餐</h3>
+                        <div class="text-2xl font-bold mb-4">$4.99</div>
+                        <ul class="space-y-2 text-sm opacity-90">
+                            <li class="flex items-center"><i class="fas fa-check text-white mr-2 w-4 h-4 flex items-center justify-center"></i> 所有工具解锁</li>
+                            <li class="flex items-center"><i class="fas fa-check text-white mr-2 w-4 h-4 flex items-center justify-center"></i> 高清无水印输出</li>
+                            <li class="flex items-center"><i class="fas fa-check text-white mr-2 w-4 h-4 flex items-center justify-center"></i> 视频转 GIF</li>
+                            <li class="flex items-center"><i class="fas fa-check text-white mr-2 w-4 h-4 flex items-center justify-center"></i> 视频压缩</li>
+                            <li class="flex items-center"><i class="fas fa-check text-white mr-2 w-4 h-4 flex items-center justify-center"></i> 全部高级功能</li>
+                        </ul>
+                        <button class="w-full mt-6 bg-white text-blue-600 py-2 px-4 rounded-button whitespace-nowrap !rounded-button">立即购买</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Share CTA Section -->
+            <section class="py-12 px-6">
+                <div class="max-w-4xl mx-auto bg-gradient-to-r from-blue-500 to-purple-600 rounded-3xl p-8 text-white text-center">
+                    <h2 class="text-2xl font-bold mb-4">分享获得更多使用次数</h2>
+                    <p class="opacity-90 mb-6">每天最多可获得 5 次免费高清使用机会</p>
+                    <button class="bg-white text-blue-600 px-6 py-3 rounded-button whitespace-nowrap !rounded-button font-medium" onclick="shareForFree()">立即分享获取</button>
+                </div>
+            </section>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <footer class="fixed bottom-0 left-0 right-0 h-16 bg-white border-t border-gray-200 glass-card flex items-center justify-center">
+            <p class="text-xs text-gray-500">© 2024 webToolBox Lite. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <!-- Tool Pages -->
+    <div id="tool-pages" class="hidden">
+        <!-- Image Tool Page -->
+        <div id="image-page" class="min-h-screen bg-white hidden">
+            <nav class="fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-200 glass-card z-50 flex items-center px-6">
+                <button class="text-primary text-lg mr-4" onclick="showDashboard()"><i class="fas fa-arrow-left"></i></button>
+                <h1 class="text-lg font-semibold text-black">图片转换工具</h1>
+            </nav>
+
+            <div class="pt-16 pb-24">
+                <!-- Upload Area -->
+                <section class="py-12 px-6">
+                    <div class="max-w-2xl mx-auto">
+                        <div class="upload-area rounded-2xl p-12 text-center border-2 border-dashed border-gray-300 bg-gray-50">
+                            <i class="fas fa-cloud-upload-alt text-gray-400 text-4xl mb-4 w-12 h-12 flex items-center justify-center mx-auto"></i>
+                            <h3 class="text-xl font-semibold text-black mb-2">点击或拖拽文件至此</h3>
+                            <p class="text-gray-500 mb-6">支持 JPG、PNG、WebP 等多种格式</p>
+                            <input type="file" id="image-upload" class="hidden" multiple accept="image/*">
+                            <button class="bg-primary text-white px-6 py-3 rounded-button whitespace-nowrap !rounded-button" onclick="document.getElementById('image-upload').click()">选择文件</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Processing Area -->
+                <section id="processing-section" class="py-6 px-6 hidden">
+                    <div class="max-w-2xl mx-auto text-center">
+                        <div class="relative inline-block">
+                            <svg class="w-24 h-24" viewBox="0 0 100 100">
+                                <circle class="progress-ring-circle" stroke="#007AFF" stroke-width="8" fill="transparent" r="40" cx="50" cy="50" stroke-dasharray="251.2" stroke-dashoffset="251.2"></circle>
+                            </svg>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <span class="text-lg font-semibold text-primary">50%</span>
+                            </div>
+                        </div>
+                        <p class="mt-4 text-gray-600">正在转换中...</p>
+                    </div>
+                </section>
+
+                <!-- Result Area -->
+                <section id="result-section" class="py-6 px-6 hidden">
+                    <div class="max-w-2xl mx-auto">
+                        <div class="bg-gray-50 rounded-2xl p-6">
+                            <h3 class="text-lg font-semibold text-black mb-4">转换完成</h3>
+                            <img id="result-preview" src="" alt="Preview" class="w-full h-48 object-cover rounded-lg mb-4">
+                            <div class="flex space-x-3">
+                                <button class="flex-1 bg-gray-200 text-black py-2 px-4 rounded-button whitespace-nowrap !rounded-button">标清下载（免费）</button>
+                                <button class="flex-1 bg-primary text-white py-2 px-4 rounded-button whitespace-nowrap !rounded-button">高清下载（消耗 1 次机会）</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <!-- Bottom Action Bar -->
+            <div class="fixed bottom-0 left-0 right-0 h-16 bg-white border-t border-gray-200 glass-card flex items-center justify-center px-6">
+                <button class="w-full bg-primary text-white py-3 rounded-button whitespace-nowrap !rounded-button">开始转换</button>
+            </div>
+        </div>
+
+        <!-- PDF Tool Page -->
+        <div id="pdf-page" class="min-h-screen bg-white hidden">
+            <nav class="fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-200 glass-card z-50 flex items-center px-6">
+                <button class="text-primary text-lg mr-4" onclick="showDashboard()"><i class="fas fa-arrow-left"></i></button>
+                <h1 class="text-lg font-semibold text-black">PDF 转换工具</h1>
+            </nav>
+
+            <div class="pt-16 pb-24">
+                <section class="py-12 px-6">
+                    <div class="max-w-2xl mx-auto">
+                        <div class="upload-area rounded-2xl p-12 text-center border-2 border-dashed border-gray-300 bg-gray-50">
+                            <i class="fas fa-file-pdf text-red-500 text-4xl mb-4 w-12 h-12 flex items-center justify-center mx-auto"></i>
+                            <h3 class="text-xl font-semibold text-black mb-2">点击或拖拽文件至此</h3>
+                            <p class="text-gray-500 mb-6">支持 PDF、DOCX、PPT 等多种格式</p>
+                            <input type="file" id="pdf-upload" class="hidden" multiple accept=".pdf,.docx,.ppt,.xls">
+                            <button class="bg-primary text-white px-6 py-3 rounded-button whitespace-nowrap !rounded-button" onclick="document.getElementById('pdf-upload').click()">选择文件</button>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="pdf-processing" class="py-6 px-6 hidden">
+                    <div class="max-w-2xl mx-auto text-center">
+                        <div class="relative inline-block">
+                            <svg class="w-24 h-24" viewBox="0 0 100 100">
+                                <circle class="progress-ring-circle" stroke="#007AFF" stroke-width="8" fill="transparent" r="40" cx="50" cy="50" stroke-dasharray="251.2" stroke-dashoffset="251.2"></circle>
+                            </svg>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <span class="text-lg font-semibold text-primary">75%</span>
+                            </div>
+                        </div>
+                        <p class="mt-4 text-gray-600">正在处理中...</p>
+                    </div>
+                </section>
+
+                <section id="pdf-result" class="py-6 px-6 hidden">
+                    <div class="max-w-2xl mx-auto">
+                        <div class="bg-gray-50 rounded-2xl p-6">
+                            <h3 class="text-lg font-semibold text-black mb-4">处理完成</h3>
+                            <div class="bg-white rounded-lg p-4 mb-4">
+                                <i class="fas fa-file-pdf text-red-500 text-2xl mb-2 w-8 h-8 flex items-center justify-center mx-auto"></i>
+                                <p class="text-sm text-gray-600">converted_file.pdf</p>
+                            </div>
+                            <div class="flex space-x-3">
+                                <button class="flex-1 bg-gray-200 text-black py-2 px-4 rounded-button whitespace-nowrap !rounded-button">标清下载（免费）</button>
+                                <button class="flex-1 bg-primary text-white py-2 px-4 rounded-button whitespace-nowrap !rounded-button">高清下载（消耗 1 次机会）</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="fixed bottom-0 left-0 right-0 h-16 bg-white border-t border-gray-200 glass-card flex items-center justify-center px-6">
+                <button class="w-full bg-primary text-white py-3 rounded-button whitespace-nowrap !rounded-button">开始处理</button>
+            </div>
+        </div>
+
+        <!-- Audio Tool Page -->
+        <div id="audio-page" class="min-h-screen bg-white hidden">
+            <nav class="fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-200 glass-card z-50 flex items-center px-6">
+                <button class="text-primary text-lg mr-4" onclick="showDashboard()"><i class="fas fa-arrow-left"></i></button>
+                <h1 class="text-lg font-semibold text-black">音频转换工具</h1>
+            </nav>
+
+            <div class="pt-16 pb-24">
+                <section class="py-12 px-6">
+                    <div class="max-w-2xl mx-auto">
+                        <div class="upload-area rounded-2xl p-12 text-center border-2 border-dashed border-gray-300 bg-gray-50">
+                            <i class="fas fa-music text-orange-500 text-4xl mb-4 w-12 h-12 flex items-center justify-center mx-auto"></i>
+                            <h3 class="text-xl font-semibold text-black mb-2">点击或拖拽文件至此</h3>
+                            <p class="text-gray-500 mb-6">支持 MP3、WAV、AAC 等多种格式</p>
+                            <input type="file" id="audio-upload" class="hidden" multiple accept="audio/*">
+                            <button class="bg-primary text-white px-6 py-3 rounded-button whitespace-nowrap !rounded-button" onclick="document.getElementById('audio-upload').click()">选择文件</button>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="audio-processing" class="py-6 px-6 hidden">
+                    <div class="max-w-2xl mx-auto text-center">
+                        <div class="relative inline-block">
+                            <svg class="w-24 h-24" viewBox="0 0 100 100">
+                                <circle class="progress-ring-circle" stroke="#007AFF" stroke-width="8" fill="transparent" r="40" cx="50" cy="50" stroke-dasharray="251.2" stroke-dashoffset="251.2"></circle>
+                            </svg>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <span class="text-lg font-semibold text-primary">60%</span>
+                            </div>
+                        </div>
+                        <p class="mt-4 text-gray-600">正在转换中...</p>
+                    </div>
+                </section>
+
+                <section id="audio-result" class="py-6 px-6 hidden">
+                    <div class="max-w-2xl mx-auto">
+                        <div class="bg-gray-50 rounded-2xl p-6">
+                            <h3 class="text-lg font-semibold text-black mb-4">转换完成</h3>
+                            <div class="bg-white rounded-lg p-4 mb-4">
+                                <i class="fas fa-music text-orange-500 text-2xl mb-2 w-8 h-8 flex items-center justify-center mx-auto"></i>
+                                <p class="text-sm text-gray-600">converted_audio.mp3</p>
+                                <div class="mt-2 bg-gray-200 rounded-full h-2">
+                                    <div class="bg-orange-500 h-2 rounded-full" style="width: 30%;"></div>
+                                </div>
+                            </div>
+                            <div class="flex space-x-3">
+                                <button class="flex-1 bg-gray-200 text-black py-2 px-4 rounded-button whitespace-nowrap !rounded-button">标清下载（免费）</button>
+                                <button class="flex-1 bg-primary text-white py-2 px-4 rounded-button whitespace-nowrap !rounded-button">高清下载（消耗 1 次机会）</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="fixed bottom-0 left-0 right-0 h-16 bg-white border-t border-gray-200 glass-card flex items-center justify-center px-6">
+                <button class="w-full bg-primary text-white py-3 rounded-button whitespace-nowrap !rounded-button">开始转换</button>
+            </div>
+        </div>
+
+        <!-- Video Tool Page -->
+        <div id="video-page" class="min-h-screen bg-white hidden">
+            <nav class="fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-200 glass-card z-50 flex items-center px-6">
+                <button class="text-primary text-lg mr-4" onclick="showDashboard()"><i class="fas fa-arrow-left"></i></button>
+                <h1 class="text-lg font-semibold text-black">视频转换工具</h1>
+            </nav>
+
+            <div class="pt-16 pb-24">
+                <section class="py-12 px-6">
+                    <div class="max-w-2xl mx-auto">
+                        <div class="upload-area rounded-2xl p-12 text-center border-2 border-dashed border-gray-300 bg-gray-50">
+                            <i class="fas fa-video text-purple-500 text-4xl mb-4 w-12 h-12 flex items-center justify-center mx-auto"></i>
+                            <h3 class="text-xl font-semibold text-black mb-2">点击或拖拽文件至此</h3>
+                            <p class="text-gray-500 mb-6">支持 MP4、MOV、AVI 等多种格式</p>
+                            <input type="file" id="video-upload" class="hidden" multiple accept="video/*">
+                            <button class="bg-primary text-white px-6 py-3 rounded-button whitespace-nowrap !rounded-button" onclick="document.getElementById('video-upload').click()">选择文件</button>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="video-processing" class="py-6 px-6 hidden">
+                    <div class="max-w-2xl mx-auto text-center">
+                        <div class="relative inline-block">
+                            <svg class="w-24 h-24" viewBox="0 0 100 100">
+                                <circle class="progress-ring-circle" stroke="#007AFF" stroke-width="8" fill="transparent" r="40" cx="50" cy="50" stroke-dasharray="251.2" stroke-dashoffset="251.2"></circle>
+                            </svg>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <span class="text-lg font-semibold text-primary">40%</span>
+                            </div>
+                        </div>
+                        <p class="mt-4 text-gray-600">正在转换中...</p>
+                    </div>
+                </section>
+
+                <section id="video-result" class="py-6 px-6 hidden">
+                    <div class="max-w-2xl mx-auto">
+                        <div class="bg-gray-50 rounded-2xl p-6">
+                            <h3 class="text-lg font-semibold text-black mb-4">转换完成</h3>
+                            <div class="bg-white rounded-lg p-4 mb-4">
+                                <i class="fas fa-play-circle text-purple-500 text-2xl mb-2 w-8 h-8 flex items-center justify-center mx-auto"></i>
+                                <p class="text-sm text-gray-600">converted_video.gif</p>
+                                <div class="mt-2 text-xs text-gray-500">时长: 15s 大小: 2.4MB</div>
+                            </div>
+                            <div class="flex space-x-3">
+                                <button class="flex-1 bg-gray-200 text-black py-2 px-4 rounded-button whitespace-nowrap !rounded-button">标清下载（免费）</button>
+                                <button class="flex-1 bg-primary text-white py-2 px-4 rounded-button whitespace-nowrap !rounded-button">高清下载（消耗 1 次机会）</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="fixed bottom-0 left-0 right-0 h-16 bg-white border-t border-gray-200 glass-card flex items-center justify-center px-6">
+                <button class="w-full bg-primary text-white py-3 rounded-button whitespace-nowrap !rounded-button">开始转换</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://static.mastergo.com/static/ai/resource/html/font-awesome/css/all.min.css"></script>
+    <script>
+        // State management
+        let freeCount = 1;
+        const maxFreeCount = 5;
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateFreeCount();
+        });
+        
+        function showDashboard() {
+            document.getElementById('dashboard-page').classList.remove('hidden');
+            document.getElementById('tool-pages').classList.add('hidden');
+            
+            // Hide all tool pages
+            document.querySelectorAll('[id$="-page"]').forEach(page => {
+                page.classList.add('hidden');
+            });
+        }
+        
+        function showToolPage(toolType) {
+            document.getElementById('dashboard-page').classList.add('hidden');
+            document.getElementById('tool-pages').classList.remove('hidden');
+            
+            // Hide all tool pages first
+            document.querySelectorAll('[id$="-page"]').forEach(page => {
+                page.classList.add('hidden');
+            });
+            
+            // Show specific tool page
+            document.getElementById(`${toolType}-page`).classList.remove('hidden');
+        }
+        
+        function updateFreeCount() {
+            document.getElementById('free-count').textContent = freeCount;
+        }
+        
+        function shareForFree() {
+            if (freeCount < maxFreeCount) {
+                freeCount++;
+                updateFreeCount();
+                alert(`分享成功！您获得了 1 次免费高清使用机会，当前剩余 ${freeCount} 次。`);
+            } else {
+                alert('今日免费次数已达上限！');
+            }
+        }
+        
+        // Simulate upload and processing
+        document.querySelectorAll('input[type="file"]').forEach(input => {
+            input.addEventListener('change', function(e) {
+                if (e.target.files.length > 0) {
+                    simulateProcessing(e.target.id.replace('-upload', ''));
+                }
+            });
+        });
+        
+        function simulateProcessing(toolType) {
+            // Show processing section
+            document.getElementById('processing-section').classList.remove('hidden');
+            document.getElementById('pdf-processing').classList.remove('hidden');
+            document.getElementById('audio-processing').classList.remove('hidden');
+            document.getElementById('video-processing').classList.remove('hidden');
+            
+            // Update progress
+            const progressCircle = document.querySelector('.progress-ring-circle');
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 10;
+                const offset = 251.2 - (251.2 * progress / 100);
+                progressCircle.style.strokeDashoffset = offset;
+                document.querySelector('.progress-ring-circle').nextElementSibling.textContent = `${progress}%`;
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    showResult(toolType);
+                }
+            }, 200);
+        }
+        
+        function showResult(toolType) {
+            // Hide processing, show result
+            document.getElementById('processing-section').classList.add('hidden');
+            document.getElementById('pdf-processing').classList.add('hidden');
+            document.getElementById('audio-processing').classList.add('hidden');
+            document.getElementById('video-processing').classList.add('hidden');
+            
+            document.getElementById('result-section').classList.remove('hidden');
+            document.getElementById('pdf-result').classList.remove('hidden');
+            document.getElementById('audio-result').classList.remove('hidden');
+            document.getElementById('video-result').classList.remove('hidden');
+            
+            // Set preview based on tool type
+            const preview = document.getElementById('result-preview');
+            if (toolType === 'image') {
+                preview.src = 'https://static.mastergo.com/ai/img_res/1779436640138a3K9mP2xQ7vN4rT8wY.jpg';
+            }
+        }
+    </script>
+</body>
+</html>

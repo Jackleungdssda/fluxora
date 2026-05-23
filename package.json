@@ -1,0 +1,50 @@
+{
+  "name": "fluxora",
+  "version": "1.1.0",
+  "description": "Fluxora — Free online file converter. Convert images, PDFs, audio & video instantly in your browser. 100% private, no uploads, no registration.",
+  "homepage": "https://fluxora.com",
+  "author": "Fluxora",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "dev:simple": "python -m http.server 8080",
+    "test": "node test/browser-test.js",
+    "deploy:worker": "cd workers && npx wrangler deploy",
+    "deploy:worker:prod": "cd workers && npx wrangler deploy -e production",
+    "kv:create": "cd workers && npx wrangler kv:namespace create LICENSES",
+    "secret:set": "cd workers && npx wrangler secret put HMAC_SECRET"
+  },
+  "devDependencies": {
+    "jsdom": "^26.1.0",
+    "wrangler": "^4.0.0"
+  },
+  "browserDependencies": {
+    "tailwindcss": "CDN",
+    "font-awesome": "CDN",
+    "pdfjs-dist": "CDN: pdfjs-dist@3.11.174",
+    "jspdf": "CDN: jspdf@2.5.1",
+    "pdf-lib": "CDN: pdf-lib@1.17.1",
+    "@ffmpeg/ffmpeg": "CDN: @ffmpeg/ffmpeg@0.12.10",
+    "@ffmpeg/core": "CDN: @ffmpeg/core@0.12.6",
+    "@ffmpeg/util": "CDN: @ffmpeg/util@0.12.1",
+    "three.js": "CDN (via three-background.js)"
+  },
+  "keywords": [
+    "file-converter",
+    "image-converter",
+    "pdf-converter",
+    "audio-converter",
+    "video-to-gif",
+    "browser-based",
+    "privacy-first",
+    "client-side",
+    "fluxora"
+  ],
+  "dependencies": {
+    "@ffmpeg/core": "^0.12.6",
+    "@ffmpeg/ffmpeg": "^0.12.10",
+    "@ffmpeg/util": "^0.12.1"
+  }
+}
