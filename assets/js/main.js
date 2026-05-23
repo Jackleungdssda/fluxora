@@ -908,24 +908,31 @@
     if (blob instanceof Blob) { setTimeout(function () { URL.revokeObjectURL(url); }, 5000); }
   }
 
-  // Lemon Squeezy checkout URLs — replace with real store links
-  var PAYMENT_LINKS = {
-    image:     '',  // e.g. 'https://store.fluxora.com/checkout/buy/variant_xxx'
-    image_pdf: '',
-    audio:     '',
-    all:       ''
+  // Paddle price ID mapping
+  var PADDLE_PRICE_IDS = {
+    image:     'pri_01ksas8ay0q93k1gf8ze7q2ten',
+    image_pdf: 'pri_01ksas7dnt1jhfbqkywfhe9xzm',
+    audio:     'pri_01ksas6at2cayn421knr6gwje6',
+    all:       'pri_01ksas56232knjqvbfq81m8ja5'
   };
 
+  // Initialize Paddle
+  Paddle.Initialize({
+    token: 'thpb31cmjgn1cfa3878n7y4w96qaw798250sncxzz9rjhz4j2r',
+    environment: 'production'
+  });
+
   window.handleBuyClick = function (plan) {
-    var link = PAYMENT_LINKS[plan];
-    if (link) {
-      // Real payment flow
-      window.open(link, '_blank');
-    } else {
-      // Payment not configured — offer demo
-      showToast('Payment coming soon. Try demo code: DEMO-ALL-3456');
-      setTimeout(function () { showLicenseModal(); }, 1500);
+    var priceId = PADDLE_PRICE_IDS[plan];
+    if (!priceId) {
+      showToast('Payment error. Please try again.');
+      return;
     }
+    var successUrl = window.location.origin + window.location.pathname + '?paid=' + plan;
+    Paddle.Checkout.open({
+      items: [{ priceId: priceId, quantity: 1 }],
+      settings: { successUrl: successUrl }
+    });
   };
 
   /* ----- File input listeners ----- */
@@ -970,6 +977,21 @@
 
   /* ----- Init ----- */
   document.addEventListener('DOMContentLoaded', function () {
+    // Handle Paddle checkout success return
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      var paidPlan = params.get('paid');
+      if (paidPlan && PADDLE_PRICE_IDS[paidPlan]) {
+        var token = 'PAID-' + paidPlan.toUpperCase() + '-' + Math.random().toString(36).slice(2, 10).toUpperCase();
+        ToolBox.activateLicense(paidPlan, token);
+        showToast('Payment successful! License activated.');
+        // Clean URL
+        var url = new URL(window.location);
+        url.searchParams.delete('paid');
+        window.history.replaceState({}, '', url.toString());
+      }
+    })();
+
     // Set body class for CSS-level premium hiding (impossible to bypass)
     if (ToolBox.isPremium()) {
       document.body.classList.add('premium-user');
