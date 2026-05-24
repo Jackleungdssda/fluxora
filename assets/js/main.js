@@ -908,16 +908,16 @@
     if (blob instanceof Blob) { setTimeout(function () { URL.revokeObjectURL(url); }, 5000); }
   }
 
-  // Gumroad checkout URLs — works globally, no JS dependency
-  var GUMROAD_LINKS = {
-    image:     'https://turnerella67.gumroad.com/l/zovamt',
-    image_pdf: 'https://turnerella67.gumroad.com/l/bikbzg',
-    audio:     'https://turnerella67.gumroad.com/l/nrpoih',
-    all:       'https://turnerella67.gumroad.com/l/mmlzfg'
+  // Ko-fi checkout URLs — 0% platform fee, global access
+  var CHECKOUT_LINKS = {
+    image:     'https://ko-fi.com/s/4a57bc9463',
+    image_pdf: 'https://ko-fi.com/s/8e46ddb47a',
+    audio:     'https://ko-fi.com/s/b561c1611e',
+    all:       'https://ko-fi.com/s/89206a1c35'
   };
 
   window.handleBuyClick = function (plan) {
-    var link = GUMROAD_LINKS[plan];
+    var link = CHECKOUT_LINKS[plan];
     if (!link) {
       showToast('Payment error. Please try again.');
       return;
