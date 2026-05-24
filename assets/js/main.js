@@ -910,10 +910,10 @@
 
   // Gumroad checkout URLs — 10% + 50¢, works with unverified PayPal
   var CHECKOUT_LINKS = {
-    image:     'https://turnerella67.gumroad.com/l/zovamt',
-    image_pdf: 'https://turnerella67.gumroad.com/l/bikbzg',
-    audio:     'https://turnerella67.gumroad.com/l/nrpoih',
-    all:       'https://turnerella67.gumroad.com/l/mmlzfg'
+    image:     'https://fluxorasite.gumroad.com/l/zovamt',
+    image_pdf: 'https://fluxorasite.gumroad.com/l/bikbzg',
+    audio:     'https://fluxorasite.gumroad.com/l/nrpoih',
+    all:       'https://fluxorasite.gumroad.com/l/mmlzfg'
   };
 
   window.handleBuyClick = function (plan) {
