@@ -350,13 +350,14 @@
     var code = input.toUpperCase();
     var isDemoCode = code.startsWith('DEMO-');
 
+    var planNames = { image: '图片套餐', image_pdf: 'PDF专业套餐', audio: '音频套餐', all: '全能套餐' };
     function activatePlan(plan, token) {
       ToolBox.activateLicense(plan, token);
-      msg.textContent = '激活成功！当前套餐: ' + plan;
+      msg.textContent = '激活成功！' + (planNames[plan] || plan) + '已解锁，所有功能立即可用。';
       msg.className = 'text-sm text-center mt-4 text-green-500';
       msg.classList.remove('hidden');
       updateFreeCount();
-      setTimeout(function () { closeLicenseModal(); }, 1500);
+      setTimeout(function () { closeLicenseModal(); }, 3000);
     }
 
     function failActivation(message) {
@@ -374,32 +375,32 @@
       'DEMO-ALL-3456': 'all'
     };
 
-    // Paid license codes — delivered to customers after Gumroad purchase
+    // Paid license codes — one unique key per buyer, delivered on Gumroad thank-you page
     var paidCodes = {
-      // Image Plan ($0.99)
-      'FLUX-IMG-A1B2C3': 'image',
-      'FLUX-IMG-D4E5F6': 'image',
-      'FLUX-IMG-G7H8I9': 'image',
-      'FLUX-IMG-J0K1L2': 'image',
-      'FLUX-IMG-M3N4O5': 'image',
-      // PDF/Pro Plan ($1.99)
-      'FLUX-PRO-P6Q7R8': 'image_pdf',
-      'FLUX-PRO-S9T0U1': 'image_pdf',
-      'FLUX-PRO-V2W3X4': 'image_pdf',
-      'FLUX-PRO-Y5Z6A7': 'image_pdf',
-      'FLUX-PRO-B8C9D0': 'image_pdf',
-      // Audio Plan ($2.99)
-      'FLUX-AUD-E1F2G3': 'audio',
-      'FLUX-AUD-H4I5J6': 'audio',
-      'FLUX-AUD-K7L8M9': 'audio',
-      'FLUX-AUD-N0O1P2': 'audio',
-      'FLUX-AUD-Q3R4S5': 'audio',
-      // All-Access Plan ($3.99)
-      'FLUX-ALL-T6U7V8': 'all',
-      'FLUX-ALL-W9X0Y1': 'all',
-      'FLUX-ALL-Z2A3B4': 'all',
-      'FLUX-ALL-C5D6E7': 'all',
-      'FLUX-ALL-F8G9H0': 'all'
+      // Image Plan ($0.99) — primary keys
+      'FLUX-IMG-KX7M2P': 'image',
+      'FLUX-IMG-WN4T8R': 'image',
+      'FLUX-IMG-VY9B5L': 'image',
+      'FLUX-IMG-ZC3J6Q': 'image',
+      'FLUX-IMG-MH1D7F': 'image',
+      // PDF/Pro Plan ($1.99) — primary keys
+      'FLUX-PRO-RN3V8W': 'image_pdf',
+      'FLUX-PRO-LT6Y1K': 'image_pdf',
+      'FLUX-PRO-DJ9X4M': 'image_pdf',
+      'FLUX-PRO-HB2Z7Q': 'image_pdf',
+      'FLUX-PRO-SF5C8N': 'image_pdf',
+      // Audio Plan ($2.99) — primary keys
+      'FLUX-AUD-HJ5D9L': 'audio',
+      'FLUX-AUD-RT6W2X': 'audio',
+      'FLUX-AUD-PQ8K1Y': 'audio',
+      'FLUX-AUD-VF3M7Z': 'audio',
+      'FLUX-AUD-NB4G6C': 'audio',
+      // All-Access Plan ($3.99) — primary keys
+      'FLUX-ALL-QF6Y1T': 'all',
+      'FLUX-ALL-KD2R7M': 'all',
+      'FLUX-ALL-VH8J3W': 'all',
+      'FLUX-ALL-XP5B9N': 'all',
+      'FLUX-ALL-LT4C6Z': 'all'
     };
 
     if (demoCodes[code]) {
