@@ -1,11 +1,9 @@
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
-
-    // CORS headers
     const headers = {
       'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type',
     };
 
@@ -13,42 +11,81 @@ export default {
       return new Response(null, { status: 204, headers });
     }
 
-    if (url.pathname !== '/verify' || request.method !== 'POST') {
-      return new Response(JSON.stringify({ success: false, message: 'Not found' }), { status: 404, headers: { ...headers, 'Content-Type': 'application/json' } });
-    }
-
-    try {
-      const body = await request.json();
-      const code = (body.code || '').trim().toUpperCase();
-
-      if (!code) {
-        return new Response(JSON.stringify({ success: false, message: 'Please enter a license key' }), { status: 400, headers: { ...headers, 'Content-Type': 'application/json' } });
+    // ── /claim — buyer clicks this link after purchase to get a unique key ──
+    if (url.pathname === '/claim' && request.method === 'GET') {
+      const plan = url.searchParams.get('plan');
+      const planNames = { image: 'image', image_pdf: 'image_pdf', audio: 'audio', all: 'all' };
+      if (!plan || !planNames[plan]) {
+        return new Response(JSON.stringify({ error: 'Invalid plan' }), { status: 400, headers: { ...headers, 'Content-Type': 'application/json' } });
       }
 
-      // Check if key is valid
-      const plan = VALID_KEYS[code];
-      if (!plan) {
-        return new Response(JSON.stringify({ success: false, message: 'Invalid license key. Please check and try again.' }), { status: 200, headers: { ...headers, 'Content-Type': 'application/json' } });
+      // Rate limit: 1 claim per IP per plan per 24h
+      const ip = request.headers.get('cf-connecting-ip') || 'unknown';
+      const rateKey = 'rate:' + ip + ':' + plan;
+      const recentClaim = await env.LICENSE_KV.get(rateKey);
+      if (recentClaim) {
+        return new Response(JSON.stringify({
+          error: 'A key has already been claimed for this plan. If you lost your key, contact lesleyturner470@gmail.com'
+        }), { status: 429, headers: { ...headers, 'Content-Type': 'application/json' } });
       }
 
-      // Check if key has already been used
-      const used = await env.LICENSE_KV.get(code);
-      if (used) {
-        return new Response(JSON.stringify({ success: false, message: 'This key has already been activated. Each key can only be used once.' }), { status: 200, headers: { ...headers, 'Content-Type': 'application/json' } });
-      }
+      // Generate unique key
+      const random = crypto.randomUUID().split('-')[0].toUpperCase();
+      const key = 'FLUX-' + plan.toUpperCase().replace('_','-') + '-' + random;
 
-      // Mark key as used
-      await env.LICENSE_KV.put(code, JSON.stringify({
-        plan: plan,
-        usedAt: new Date().toISOString(),
-        fingerprint: body.fingerprint || 'unknown'
+      // Store in KV as unused
+      await env.LICENSE_KV.put('gen:' + key, JSON.stringify({
+        plan: planNames[plan],
+        status: 'unused',
+        createdAt: new Date().toISOString()
       }));
+      await env.LICENSE_KV.put(rateKey, '1', { expirationTtl: 86400 });
 
-      return new Response(JSON.stringify({ success: true, plan: plan, token: 'paid-' + code }), { status: 200, headers: { ...headers, 'Content-Type': 'application/json' } });
+      const html = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Your License Key — Fluxora</title><style>body{font-family:-apple-system,sans-serif;background:#000;color:#fff;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}.card{background:rgba(28,28,30,0.8);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:40px;text-align:center;max-width:480px;width:90%}h1{color:#0A84FF;font-size:1.5rem;margin-bottom:8px}.key{background:rgba(10,132,255,0.15);border:1px solid rgba(10,132,255,0.3);border-radius:12px;padding:16px 24px;font-size:1.4rem;font-family:monospace;letter-spacing:2px;color:#fff;margin:24px 0;user-select:all}.steps{text-align:left;color:rgba(255,255,255,0.7);font-size:0.9rem;line-height:1.8}.steps span{color:#0A84FF;font-weight:600}</style></head><body><div class="card"><h1>Your License Key</h1><div class="key">' + key + '</div><p style="color:rgba(255,255,255,0.5);font-size:0.8rem">Select the key above and copy it</p><div class="steps"><span>1.</span> Go to <strong>https://fluxora.site</strong><br><span>2.</span> Click <strong>"My License"</strong> in the top bar<br><span>3.</span> Paste your key and click <strong>Verify</strong><br><span>4.</span> Your tools unlock instantly!</div><p style="color:rgba(255,255,255,0.3);font-size:0.75rem;margin-top:24px">This key can only be used once. Do not share it.<br>Questions? lesleyturner470@gmail.com</p></div></body></html>';
 
-    } catch (err) {
-      return new Response(JSON.stringify({ success: false, message: 'Server error. Please try again.' }), { status: 500, headers: { ...headers, 'Content-Type': 'application/json' } });
+      return new Response(html, { status: 200, headers: { ...headers, 'Content-Type': 'text/html;charset=utf-8' } });
     }
+
+    // ── /verify — validate and activate a license key ──
+    if (url.pathname === '/verify' && request.method === 'POST') {
+      try {
+        const body = await request.json();
+        const code = (body.code || '').trim().toUpperCase();
+
+        if (!code) {
+          return new Response(JSON.stringify({ success: false, message: 'Please enter a license key' }), { status: 400, headers: { ...headers, 'Content-Type': 'application/json' } });
+        }
+
+        // Check pre-generated keys
+        if (VALID_KEYS[code]) {
+          const used = await env.LICENSE_KV.get(code);
+          if (used) {
+            return new Response(JSON.stringify({ success: false, message: 'This key has already been activated. Each key can only be used once.' }), { status: 200, headers: { ...headers, 'Content-Type': 'application/json' } });
+          }
+          await env.LICENSE_KV.put(code, JSON.stringify({ plan: VALID_KEYS[code], usedAt: new Date().toISOString(), fingerprint: body.fingerprint || 'unknown' }));
+          return new Response(JSON.stringify({ success: true, plan: VALID_KEYS[code], token: 'paid-' + code }), { status: 200, headers: { ...headers, 'Content-Type': 'application/json' } });
+        }
+
+        // Check dynamically generated keys
+        const genData = await env.LICENSE_KV.get('gen:' + code);
+        if (genData) {
+          const gen = JSON.parse(genData);
+          if (gen.status === 'used') {
+            return new Response(JSON.stringify({ success: false, message: 'This key has already been activated. Each key can only be used once.' }), { status: 200, headers: { ...headers, 'Content-Type': 'application/json' } });
+          }
+          // Mark as used
+          await env.LICENSE_KV.put('gen:' + code, JSON.stringify({ ...gen, status: 'used', usedAt: new Date().toISOString(), fingerprint: body.fingerprint || 'unknown' }));
+          return new Response(JSON.stringify({ success: true, plan: gen.plan, token: 'paid-' + code }), { status: 200, headers: { ...headers, 'Content-Type': 'application/json' } });
+        }
+
+        return new Response(JSON.stringify({ success: false, message: 'Invalid license key. Please check and try again.' }), { status: 200, headers: { ...headers, 'Content-Type': 'application/json' } });
+
+      } catch (err) {
+        return new Response(JSON.stringify({ success: false, message: 'Server error. Please try again.' }), { status: 500, headers: { ...headers, 'Content-Type': 'application/json' } });
+      }
+    }
+
+    return new Response(JSON.stringify({ success: false, message: 'Not found' }), { status: 404, headers: { ...headers, 'Content-Type': 'application/json' } });
   }
 };
 
