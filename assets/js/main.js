@@ -366,7 +366,7 @@
       if (btn) { btn.disabled = false; btn.textContent = '验证激活'; }
     }
 
-    // Demo codes (instant — no network needed)
+    // Demo codes for trial users
     var demoCodes = {
       'DEMO-IMAGE-1234': 'image',
       'DEMO-PDF-5678': 'image_pdf',
@@ -374,8 +374,42 @@
       'DEMO-ALL-3456': 'all'
     };
 
+    // Paid license codes — delivered to customers after Gumroad purchase
+    var paidCodes = {
+      // Image Plan ($0.99)
+      'FLUX-IMG-A1B2C3': 'image',
+      'FLUX-IMG-D4E5F6': 'image',
+      'FLUX-IMG-G7H8I9': 'image',
+      'FLUX-IMG-J0K1L2': 'image',
+      'FLUX-IMG-M3N4O5': 'image',
+      // PDF/Pro Plan ($1.99)
+      'FLUX-PRO-P6Q7R8': 'image_pdf',
+      'FLUX-PRO-S9T0U1': 'image_pdf',
+      'FLUX-PRO-V2W3X4': 'image_pdf',
+      'FLUX-PRO-Y5Z6A7': 'image_pdf',
+      'FLUX-PRO-B8C9D0': 'image_pdf',
+      // Audio Plan ($2.99)
+      'FLUX-AUD-E1F2G3': 'audio',
+      'FLUX-AUD-H4I5J6': 'audio',
+      'FLUX-AUD-K7L8M9': 'audio',
+      'FLUX-AUD-N0O1P2': 'audio',
+      'FLUX-AUD-Q3R4S5': 'audio',
+      // All-Access Plan ($3.99)
+      'FLUX-ALL-T6U7V8': 'all',
+      'FLUX-ALL-W9X0Y1': 'all',
+      'FLUX-ALL-Z2A3B4': 'all',
+      'FLUX-ALL-C5D6E7': 'all',
+      'FLUX-ALL-F8G9H0': 'all'
+    };
+
     if (demoCodes[code]) {
       activatePlan(demoCodes[code], 'demo-token-' + Date.now());
+      if (btn) { btn.disabled = false; btn.textContent = '验证激活'; }
+      return;
+    }
+
+    if (paidCodes[code]) {
+      activatePlan(paidCodes[code], 'paid-' + code);
       if (btn) { btn.disabled = false; btn.textContent = '验证激活'; }
       return;
     }
