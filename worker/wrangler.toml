@@ -1,0 +1,7 @@
+name = "fluxora-license"
+main = "index.js"
+compatibility_date = "2025-01-01"
+
+[[kv_namespaces]]
+binding = "LICENSE_KV"
+id = "8e69d0b371174e65b8d3cd5726388a34"

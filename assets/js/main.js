@@ -330,7 +330,7 @@
     document.getElementById('license-modal').classList.add('hidden');
   };
 
-  var WORKER_URL = 'https://api.fluxora.com';
+  var WORKER_URL = 'https://fluxora-license.lesleyturner470.workers.dev';
 
   window.verifyLicense = function () {
     var input = document.getElementById('license-input').value.trim();
@@ -338,22 +338,20 @@
     var btn = document.querySelector('#license-modal button.bg-primary');
 
     if (!input) {
-      msg.textContent = '请输入激活码';
+      msg.textContent = 'Please enter a license key';
       msg.className = 'text-sm text-center mt-4 text-red-500';
       msg.classList.remove('hidden');
       return;
     }
 
-    if (btn) { btn.disabled = true; btn.textContent = '验证中...'; }
+    if (btn) { btn.disabled = true; btn.textContent = 'Verifying...'; }
 
-    // Try Cloudflare Worker first, fallback to demo codes
     var code = input.toUpperCase();
-    var isDemoCode = code.startsWith('DEMO-');
 
-    var planNames = { image: '图片套餐', image_pdf: 'PDF专业套餐', audio: '音频套餐', all: '全能套餐' };
+    var planNames = { image: 'Image Plan', image_pdf: 'Pro Plan', audio: 'Audio Plan', all: 'All-Access Plan' };
     function activatePlan(plan, token) {
       ToolBox.activateLicense(plan, token);
-      msg.textContent = '激活成功！' + (planNames[plan] || plan) + '已解锁，所有功能立即可用。';
+      msg.textContent = 'Activated! ' + (planNames[plan] || plan) + ' unlocked.';
       msg.className = 'text-sm text-center mt-4 text-green-500';
       msg.classList.remove('hidden');
       updateFreeCount();
@@ -361,133 +359,47 @@
     }
 
     function failActivation(message) {
-      msg.textContent = message || '激活码无效，请检查后重试';
+      msg.textContent = message || 'Invalid license key';
       msg.className = 'text-sm text-center mt-4 text-red-500';
       msg.classList.remove('hidden');
-      if (btn) { btn.disabled = false; btn.textContent = '验证激活'; }
+      if (btn) { btn.disabled = false; btn.textContent = 'Verify'; }
     }
 
-    // Demo codes for trial users
+    // Demo codes — validated locally, unlimited reuse
     var demoCodes = {
       'DEMO-IMAGE-1234': 'image',
       'DEMO-PDF-5678': 'image_pdf',
       'DEMO-AUDIO-9012': 'audio',
       'DEMO-ALL-3456': 'all'
     };
-
-    // Paid license codes — 50 unique keys per plan, assigned one per buyer via Gumroad License Keys
-    var paidCodes = {
-      // Image Plan ($0.99)
-      'FLUX-IMG-8U7EPG': 'image', 'FLUX-IMG-2OBGPJ': 'image', 'FLUX-IMG-MQA70M': 'image',
-      'FLUX-IMG-JK9GOP': 'image', 'FLUX-IMG-DNH3V1': 'image', 'FLUX-IMG-7SEHG0': 'image',
-      'FLUX-IMG-XSNJQW': 'image', 'FLUX-IMG-WQ1VFG': 'image', 'FLUX-IMG-BQTOPO': 'image',
-      'FLUX-IMG-403ECV': 'image', 'FLUX-IMG-QQ4ZDG': 'image', 'FLUX-IMG-DSPO7K': 'image',
-      'FLUX-IMG-QRNQA9': 'image', 'FLUX-IMG-PR1YSA': 'image', 'FLUX-IMG-73NXCX': 'image',
-      'FLUX-IMG-JK34SM': 'image', 'FLUX-IMG-Q01BFK': 'image', 'FLUX-IMG-0QYEN7': 'image',
-      'FLUX-IMG-B5YEXU': 'image', 'FLUX-IMG-CXDYA8': 'image', 'FLUX-IMG-9GDPM2': 'image',
-      'FLUX-IMG-Q4GY1E': 'image', 'FLUX-IMG-1E5COZ': 'image', 'FLUX-IMG-XKXESR': 'image',
-      'FLUX-IMG-RFMYHI': 'image', 'FLUX-IMG-5RA36W': 'image', 'FLUX-IMG-O6FJ6N': 'image',
-      'FLUX-IMG-5DRXZ6': 'image', 'FLUX-IMG-X7KXOW': 'image', 'FLUX-IMG-02I5M9': 'image',
-      'FLUX-IMG-N0CT3D': 'image', 'FLUX-IMG-D6V8IX': 'image', 'FLUX-IMG-1ET526': 'image',
-      'FLUX-IMG-BY7I90': 'image', 'FLUX-IMG-MATOV1': 'image', 'FLUX-IMG-QK3B8M': 'image',
-      'FLUX-IMG-3NZVL5': 'image', 'FLUX-IMG-782C27': 'image', 'FLUX-IMG-EPKXR7': 'image',
-      'FLUX-IMG-XDITFX': 'image', 'FLUX-IMG-WNKJUN': 'image', 'FLUX-IMG-0AW1Q2': 'image',
-      'FLUX-IMG-Z0RAP8': 'image', 'FLUX-IMG-2A07UR': 'image', 'FLUX-IMG-9CR6DM': 'image',
-      'FLUX-IMG-1H2V99': 'image', 'FLUX-IMG-67OZUX': 'image', 'FLUX-IMG-SNPHNU': 'image',
-      'FLUX-IMG-UIPV9Z': 'image', 'FLUX-IMG-WA2XU9': 'image',
-      // PDF/Pro Plan ($1.99)
-      'FLUX-PRO-KYG1IZ': 'image_pdf', 'FLUX-PRO-SFCI79': 'image_pdf', 'FLUX-PRO-UFBFD1': 'image_pdf',
-      'FLUX-PRO-1O16RS': 'image_pdf', 'FLUX-PRO-93QG69': 'image_pdf', 'FLUX-PRO-839ZNP': 'image_pdf',
-      'FLUX-PRO-CX4PIS': 'image_pdf', 'FLUX-PRO-AHJ3A1': 'image_pdf', 'FLUX-PRO-FWSO5B': 'image_pdf',
-      'FLUX-PRO-C4HIB5': 'image_pdf', 'FLUX-PRO-5K0BYJ': 'image_pdf', 'FLUX-PRO-EPZLIO': 'image_pdf',
-      'FLUX-PRO-JZ3UW1': 'image_pdf', 'FLUX-PRO-LF5RXC': 'image_pdf', 'FLUX-PRO-MXFSBN': 'image_pdf',
-      'FLUX-PRO-R5DF5R': 'image_pdf', 'FLUX-PRO-DEYP7K': 'image_pdf', 'FLUX-PRO-5ZPXGR': 'image_pdf',
-      'FLUX-PRO-7YRX8Y': 'image_pdf', 'FLUX-PRO-83QIVG': 'image_pdf', 'FLUX-PRO-OI4HD2': 'image_pdf',
-      'FLUX-PRO-EHVHTS': 'image_pdf', 'FLUX-PRO-9X1JT8': 'image_pdf', 'FLUX-PRO-DM5AB9': 'image_pdf',
-      'FLUX-PRO-BXPJ7H': 'image_pdf', 'FLUX-PRO-T6URNS': 'image_pdf', 'FLUX-PRO-2IRIZC': 'image_pdf',
-      'FLUX-PRO-ET88Z9': 'image_pdf', 'FLUX-PRO-713604': 'image_pdf', 'FLUX-PRO-8WWAJM': 'image_pdf',
-      'FLUX-PRO-IQUAY0': 'image_pdf', 'FLUX-PRO-VOXBLE': 'image_pdf', 'FLUX-PRO-Z2H4IP': 'image_pdf',
-      'FLUX-PRO-WLSDCX': 'image_pdf', 'FLUX-PRO-DTD7IG': 'image_pdf', 'FLUX-PRO-NK4ORG': 'image_pdf',
-      'FLUX-PRO-TAURQ7': 'image_pdf', 'FLUX-PRO-TYFRWS': 'image_pdf', 'FLUX-PRO-V3XEZZ': 'image_pdf',
-      'FLUX-PRO-4SFIA2': 'image_pdf', 'FLUX-PRO-7G922I': 'image_pdf', 'FLUX-PRO-ML5OCW': 'image_pdf',
-      'FLUX-PRO-GATU5Y': 'image_pdf', 'FLUX-PRO-NHWKZ2': 'image_pdf', 'FLUX-PRO-CCJT44': 'image_pdf',
-      'FLUX-PRO-K3L86U': 'image_pdf', 'FLUX-PRO-BZ2F7N': 'image_pdf', 'FLUX-PRO-CPD48R': 'image_pdf',
-      'FLUX-PRO-K5V6IO': 'image_pdf', 'FLUX-PRO-B91SDK': 'image_pdf',
-      // Audio Plan ($2.99)
-      'FLUX-AUD-9T58Q2': 'audio', 'FLUX-AUD-AHYRRA': 'audio', 'FLUX-AUD-TMWRB0': 'audio',
-      'FLUX-AUD-WXN167': 'audio', 'FLUX-AUD-XBN1BA': 'audio', 'FLUX-AUD-AVEN6T': 'audio',
-      'FLUX-AUD-COD7HB': 'audio', 'FLUX-AUD-K1JO0W': 'audio', 'FLUX-AUD-VLJETA': 'audio',
-      'FLUX-AUD-E4FX7N': 'audio', 'FLUX-AUD-FIBAAA': 'audio', 'FLUX-AUD-AWHM62': 'audio',
-      'FLUX-AUD-OJE56V': 'audio', 'FLUX-AUD-H5MXXR': 'audio', 'FLUX-AUD-H1AQLZ': 'audio',
-      'FLUX-AUD-23JCMJ': 'audio', 'FLUX-AUD-OBS44I': 'audio', 'FLUX-AUD-FKXCHC': 'audio',
-      'FLUX-AUD-6OVHVN': 'audio', 'FLUX-AUD-ZE40CM': 'audio', 'FLUX-AUD-IJDV05': 'audio',
-      'FLUX-AUD-N8170Y': 'audio', 'FLUX-AUD-PTGJJ4': 'audio', 'FLUX-AUD-0GQOVV': 'audio',
-      'FLUX-AUD-ADIJ6A': 'audio', 'FLUX-AUD-ZTJ8HM': 'audio', 'FLUX-AUD-EEFKKJ': 'audio',
-      'FLUX-AUD-Q8DZV7': 'audio', 'FLUX-AUD-PC65MH': 'audio', 'FLUX-AUD-ULFAYK': 'audio',
-      'FLUX-AUD-KH71RZ': 'audio', 'FLUX-AUD-GX8X6X': 'audio', 'FLUX-AUD-YIQI5Y': 'audio',
-      'FLUX-AUD-UZVS6I': 'audio', 'FLUX-AUD-MDYX1U': 'audio', 'FLUX-AUD-EHPM88': 'audio',
-      'FLUX-AUD-78SMRR': 'audio', 'FLUX-AUD-QVF5AG': 'audio', 'FLUX-AUD-C6XTKW': 'audio',
-      'FLUX-AUD-OZ73NF': 'audio', 'FLUX-AUD-L7QDUX': 'audio', 'FLUX-AUD-XJZGAX': 'audio',
-      'FLUX-AUD-PHT7Y9': 'audio', 'FLUX-AUD-WY93BF': 'audio', 'FLUX-AUD-X50UTF': 'audio',
-      'FLUX-AUD-SLRFZO': 'audio', 'FLUX-AUD-NGJ56I': 'audio', 'FLUX-AUD-OL4GRH': 'audio',
-      'FLUX-AUD-RDT5QT': 'audio', 'FLUX-AUD-UVH4F3': 'audio',
-      // All-Access Plan ($3.99)
-      'FLUX-ALL-509OCL': 'all', 'FLUX-ALL-W8SPSK': 'all', 'FLUX-ALL-PLQT10': 'all',
-      'FLUX-ALL-TFN2LX': 'all', 'FLUX-ALL-G36CM5': 'all', 'FLUX-ALL-X9BGEZ': 'all',
-      'FLUX-ALL-475Z2D': 'all', 'FLUX-ALL-AFJCA2': 'all', 'FLUX-ALL-P3CP8H': 'all',
-      'FLUX-ALL-2CL5MJ': 'all', 'FLUX-ALL-PVXMUT': 'all', 'FLUX-ALL-C8ZMLU': 'all',
-      'FLUX-ALL-XI1VPZ': 'all', 'FLUX-ALL-CZAYNG': 'all', 'FLUX-ALL-QWRCO9': 'all',
-      'FLUX-ALL-B8Y4GI': 'all', 'FLUX-ALL-BQL4MV': 'all', 'FLUX-ALL-T27M8O': 'all',
-      'FLUX-ALL-UZFQPT': 'all', 'FLUX-ALL-FUHWSE': 'all', 'FLUX-ALL-C6PH9M': 'all',
-      'FLUX-ALL-S35DLO': 'all', 'FLUX-ALL-04DQ49': 'all', 'FLUX-ALL-WKS7BE': 'all',
-      'FLUX-ALL-V4Y662': 'all', 'FLUX-ALL-IF1GXG': 'all', 'FLUX-ALL-WQZPWR': 'all',
-      'FLUX-ALL-JW0UM2': 'all', 'FLUX-ALL-OL38PX': 'all', 'FLUX-ALL-WBTXK6': 'all',
-      'FLUX-ALL-4I6JY7': 'all', 'FLUX-ALL-H4LW9D': 'all', 'FLUX-ALL-6MJGDG': 'all',
-      'FLUX-ALL-PXXXCU': 'all', 'FLUX-ALL-2JTBPM': 'all', 'FLUX-ALL-3KQ1HY': 'all',
-      'FLUX-ALL-JFZD31': 'all', 'FLUX-ALL-5EVWM1': 'all', 'FLUX-ALL-ZB2X1K': 'all',
-      'FLUX-ALL-PFN5I5': 'all', 'FLUX-ALL-I77MWJ': 'all', 'FLUX-ALL-X0PTYG': 'all',
-      'FLUX-ALL-X3B2D7': 'all', 'FLUX-ALL-OIQAI6': 'all', 'FLUX-ALL-W2GY8Y': 'all',
-      'FLUX-ALL-FB4PMT': 'all', 'FLUX-ALL-DGLL4D': 'all', 'FLUX-ALL-PDXITP': 'all',
-      'FLUX-ALL-L0Z973': 'all', 'FLUX-ALL-LM0LZR': 'all'
-    };
-
     if (demoCodes[code]) {
-      activatePlan(demoCodes[code], 'demo-token-' + Date.now());
-      if (btn) { btn.disabled = false; btn.textContent = '验证激活'; }
+      activatePlan(demoCodes[code], 'demo-' + Date.now());
+      if (btn) { btn.disabled = false; btn.textContent = 'Verify'; }
+      return;
+    }
+    if (code.startsWith('DEMO-')) {
+      failActivation('Invalid demo code. Try: DEMO-ALL-3456');
       return;
     }
 
-    if (paidCodes[code]) {
-      activatePlan(paidCodes[code], 'paid-' + code);
-      if (btn) { btn.disabled = false; btn.textContent = '验证激活'; }
-      return;
-    }
-
-    // For non-demo codes, try Worker endpoint
-    if (isDemoCode) {
-      failActivation('Demo code invalid. Try DEMO-ALL-3456');
-      return;
-    }
-
-    // Real license verification via Cloudflare Worker
-    fetch(WORKER_URL + '/api/verify-license', {
+    // All paid codes → Cloudflare Worker (global one-time use)
+    fetch(WORKER_URL + '/verify', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code: code, deviceFingerprint: navigator.userAgent })
+      body: JSON.stringify({ code: code, fingerprint: navigator.userAgent })
     })
     .then(function (r) { return r.json(); })
     .then(function (data) {
-      if (btn) { btn.disabled = false; btn.textContent = '验证激活'; }
+      if (btn) { btn.disabled = false; btn.textContent = 'Verify'; }
       if (data.success && data.plan) {
-        activatePlan(data.plan, data.token);
+        activatePlan(data.plan, data.token || ('paid-' + code));
       } else {
-        failActivation(data.message || 'Invalid license code');
+        failActivation(data.message || 'Invalid license key');
       }
     })
     .catch(function () {
-      // Network error — Worker may not be deployed yet
-      if (btn) { btn.disabled = false; btn.textContent = '验证激活'; }
-      failActivation('Cannot reach license server. Use demo code: DEMO-ALL-3456');
+      if (btn) { btn.disabled = false; btn.textContent = 'Verify'; }
+      failActivation('Cannot connect to license server. Please try again.');
     });
   };
 
